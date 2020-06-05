@@ -6,8 +6,9 @@ import Link from "next/link";
 import Date from "../components/date";
 import { GetStaticProps } from "next";
 import firebase from "../firebase/clientApp";
-import React, { useState, Suspense } from "react";
+import React, { useState } from "react";
 import ClientSide from "../components/clientSide";
+import { useDocument } from "@nandorojo/swr-firestore";
 
 export default function Home({
   staticCollection,
@@ -27,6 +28,7 @@ export default function Home({
       setName(name.replace(staticCollection[1].name, ""));
     }
   };
+  const { data: userDoc, update } = useDocument<User>(`users/sample`);
 
   return (
     <Layout home>
@@ -34,14 +36,23 @@ export default function Home({
         <title>{siteTitle}</title>
       </Head>
       <section className={utilStyles.headingMd}>
-        <p>{name}</p>
-        <button onClick={() => toggleText()}>{buttonText}</button>
-        <p>
-          (This is a sample website - you’ll be building a site like this on{" "}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-        </p>
+        <h1>boiler-plates</h1>
       </section>
+      <h2>local state change</h2>
+      <p>button → setState :{name}</p>
+      <button onClick={() => toggleText()}>{buttonText}</button>
       <ClientSide />
+      onBlur set firestore doc. Resulting in change of above.
+      <input
+        type="text"
+        value={name}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setName(e.target.value)
+        }
+        onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+          update({ name: e.target.value })
+        }
+      />
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
         <ul className={utilStyles.list}>

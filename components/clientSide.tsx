@@ -1,13 +1,8 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { useDocument, useCollection } from "@nandorojo/swr-firestore";
 
-type User = {
-  name: string;
-};
-
 export default function ClientSide() {
-  const user = { id: "sample" };
-  const { data, error } = useDocument<User>(`users/${user.id}`, {
+  const { data, error } = useDocument<User>(`users/sample`, {
     listen: true,
   });
 
@@ -22,8 +17,8 @@ export default function ClientSide() {
   return (
     <>
       <h2>client side rendering</h2>
-      <div>{data.name}</div>
-      <div>{collection[0].name}</div>
+      <div>only shoing collection: {collection[0].name}</div>
+      <div>showing and listening to firestore change: {data.name}</div>
     </>
   );
 }
