@@ -7,18 +7,16 @@ type User = {
 
 export default function ClientSide() {
   const user = { id: "sample" };
-  const { data } = useDocument<User>(`users/${user.id}`);
-  const isServer = typeof window === "undefined";
+  const { data, update, error } = useDocument<User>(`users/${user.id}`, {
+    listen: true,
+  });
+
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>Loading</div>;
   return (
     <>
       <h2>client side rendering</h2>
-      {!isServer ? (
-        <Suspense fallback={<div>loading</div>}>
-          <div>{data.name}</div>
-        </Suspense>
-      ) : (
-        <div>it is server</div>
-      )}
+      <div>{data.name}</div>
     </>
   );
 }

@@ -8,6 +8,11 @@ import { GetStaticProps } from "next";
 import firebase from "../firebase/clientApp";
 import React, { useState, Suspense } from "react";
 import ClientSide from "../components/clientSide";
+import { useDocument } from "@nandorojo/swr-firestore";
+
+type User = {
+  name: string;
+};
 
 export default function Home({
   staticCollection,
