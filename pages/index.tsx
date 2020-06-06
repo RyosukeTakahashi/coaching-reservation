@@ -1,14 +1,20 @@
-import Head from "next/head";
-import Layout, { siteTitle } from "../components/layout";
-import utilStyles from "../styles/utils.module.css";
-import { getSortedPostsData } from "../lib/posts";
-import Link from "next/link";
-import Date from "../components/date";
-import { GetStaticProps } from "next";
-import firebase from "../firebase/clientApp";
 import React, { useState } from "react";
+import Head from "next/head";
+import dynamic from "next/dynamic";
+import { GetStaticProps } from "next";
+import { getSortedPostsData } from "../lib/posts";
+import Layout, { siteTitle } from "../components/layout";
 import ClientSide from "../components/clientSide";
-import { useDocument } from "@nandorojo/swr-firestore";
+import utilStyles from "../styles/utils.module.css";
+import firebase from "../firebase/clientApp";
+import { LocalStateExample } from "../components/localStateExample";
+import { BlogList } from "../components/BlogList";
+import { setCookie } from "nookies";
+
+const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
+  ssr: false,
+});
+setCookie(null, "nextJsBlog", "value", { sameSite: "None", secure: true });
 
 export default function Home({
   staticCollection,
@@ -17,7 +23,7 @@ export default function Home({
   staticCollection: { name: string }[];
   allPostsData: { date: string; title: string; id: string }[];
 }) {
-  const [name, setName] = useState(staticCollection[0].name);
+  const [name, setName] = useState(staticCollection[2].name);
   const [buttonText, setButtonText] = useState("add last name");
   const toggleText = () => {
     if (buttonText.includes("add")) {
@@ -28,7 +34,6 @@ export default function Home({
       setName(name.replace(staticCollection[1].name, ""));
     }
   };
-  const { data: userDoc, update } = useDocument<User>(`users/sample`);
 
   return (
     <Layout home>
@@ -36,38 +41,17 @@ export default function Home({
         <title>{siteTitle}</title>
       </Head>
       <section className={utilStyles.headingMd}>
-        <h1>boiler-plates</h1>
+        <h1>Next.js boiler-plates</h1>
       </section>
-      <h2>local state change</h2>
-      <p>button → setState :{name}</p>
-      <button onClick={() => toggleText()}>{buttonText}</button>
-      <ClientSide />
-      onBlur set firestore doc. Resulting in change of above.
-      <input
-        type="text"
-        value={name}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setName(e.target.value)
-        }
-        onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-          update({ name: e.target.value })
-        }
+      <AuthWithNoSSR />
+      <LocalStateExample
+        name={name}
+        onClick={() => toggleText()}
+        buttonText={buttonText}
       />
+      <ClientSide setName={setName} />
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>Blog</h2>
-        <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, date, title }) => (
-            <li className={utilStyles.listItem} key={id}>
-              <Link href={"/posts/[id]"} as={`/posts/${id}`}>
-                <a>{title}</a>
-              </Link>
-              <br />
-              <small className={utilStyles.lightText}>
-                <Date dateString={date} />
-              </small>
-            </li>
-          ))}
-        </ul>
+        <BlogList allPosts={allPostsData} />
       </section>
     </Layout>
   );

@@ -9,9 +9,9 @@ const fuego = new Fuego(firebaseConfig);
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <FuegoProvider fuego={fuego}>
-      {/*<UserProvider>*/}
-      <Component {...pageProps} />
-      {/*</UserProvider>*/}
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
     </FuegoProvider>
   );
 }

@@ -1,10 +1,9 @@
-import * as firebase from "firebase/app";
-import "firebase/auth"; // If you need it
-import "firebase/firestore"; // If you need it
-import "firebase/storage"; // If you need it
-import "firebase/analytics"; // If you need it
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/analytics";
 
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
@@ -19,7 +18,7 @@ export const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
   // To enable analytics. https://firebase.google.com/docs/analytics/get-started
-  // if ("measurementId" in clientCredentials) firebase.analytics();
+  // if ("measurementId" in firebaseConfig) firebase.analytics();
 }
 
 export default firebase;
