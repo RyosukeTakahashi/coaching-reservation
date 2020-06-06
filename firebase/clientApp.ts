@@ -14,11 +14,11 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Check that `window` is in scope for the analytics module!
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
-  // To enable analytics. https://firebase.google.com/docs/analytics/get-started
-  // if ("measurementId" in firebaseConfig) firebase.analytics();
+  if (typeof window !== "undefined") {
+    firebase.analytics();
+  }
 }
 
 export default firebase;

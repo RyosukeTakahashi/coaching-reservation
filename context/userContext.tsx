@@ -1,7 +1,11 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import firebase from "../firebase/clientApp";
 
-export const UserContext = createContext();
+export const UserContext = createContext({
+  loadingUser: false,
+  user: null,
+  setUser: null,
+});
 
 export default function UserContextComp({ children }) {
   const [user, setUser] = useState(null);
@@ -23,6 +27,7 @@ export default function UserContextComp({ children }) {
           const reservations = reservationSnapshot.docs.map((doc) =>
             doc.data()
           );
+          //add user to firestore if no document.
           if (userDoc.data() === undefined) {
             await db
               .collection("users")
@@ -49,5 +54,5 @@ export default function UserContextComp({ children }) {
   );
 }
 
-// Custom hook that shorhands the context!
-export const useUser = () => useContext(UserContext);
+// @ts-ignore
+export const useUser = () => useContext(UserContext); //just a shorthand
