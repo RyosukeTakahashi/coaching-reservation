@@ -1,11 +1,7 @@
 import React, { FC, useState } from "react";
 import { useUser } from "../../context/userContext";
-// import { atom, useRecoilState } from "recoil";
-
-// const answerState = atom({
-//   key: "answer",
-//   dafault: { sample: "sample" },
-// });
+import { useSampleCounter, sampleAtom } from "../../src/atoms";
+import { useRecoilState } from "recoil";
 
 type radioOption = {
   value: string;
@@ -14,8 +10,11 @@ type radioOption = {
 };
 
 const RadioOption: FC<radioOption> = (props: { value; label; radioName }) => {
+  const [count] = useSampleCounter();
+
   return (
     <div className="radio_option">
+      {count}
       <label>
         <input type="radio" name={props.radioName} value={props.value} />
         {props.label}
@@ -30,8 +29,10 @@ type radioQuestionProps = {
 };
 
 const RadioQuestion: FC<radioQuestionProps> = (props: { title; options }) => {
+  const [count] = useSampleCounter();
   return (
     <div className="question">
+      {count}
       <div className="title">
         <p>{props.title}</p>
       </div>
@@ -84,12 +85,13 @@ export default function CoachingPreparation({}: {
   staticCollection: { name: string }[];
   allPostsData: { date: string; title: string; id: string }[];
 }) {
-  const [answer, setAnswer] = useState({ sample: "test" });
-
   const { user } = useUser();
+  const [atom, setAtom] = useRecoilState(sampleAtom);
+  const { count } = atom;
   return (
     <main className={"form"}>
-      {answer.sample}
+      {count}
+      <button onClick={() => setAtom({ count: count + 1 })}>increment</button>
       {user && user.displayName}
       <RadioQuestion {...radioSettings[radioNameMeet]} />
       <RadioQuestion {...radioSettings[meetOrVideo]} />
