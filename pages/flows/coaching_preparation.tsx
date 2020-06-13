@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   useUserState,
   radioAnswerWithName,
@@ -203,15 +203,19 @@ enum CalendlyState {
   scheduled,
 }
 
-const Calendly = React.memo(() => {
+const Calendly = React.memo((props: { setCalendlyState }) => {
   const [calendlySetting] = useRecoilState(calendlySettingAtom);
   const onScheduled = React.useCallback(() => {
+    props.setCalendlyState(CalendlyState.datetimeSelected);
     document
       .getElementsByClassName("calendly-inline-widget")[0]
-      .setAttribute("style", "height: 750px;");
-  }, []);
+      .setAttribute("style", "height: 650px;");
+  }, [props.setCalendlyState]);
   return (
-    <CalendlyEventListener onEventScheduled={onScheduled}>
+    <CalendlyEventListener
+      onEventScheduled={onScheduled}
+      onDateAndTimeSelected={onScheduled}
+    >
       <InlineWidget {...calendlySetting} />
     </CalendlyEventListener>
   );
@@ -226,6 +230,7 @@ export default function CoachingPreparation({}: {
   const [calendlySetting, setCalendlySetting] = useRecoilState(
     calendlySettingAtom
   );
+  const [calendlyState, setCalendlyState] = useState(0);
   useEffect(() => {
     if (!loadingUser && user) {
       setCalendlySetting({
@@ -267,11 +272,11 @@ export default function CoachingPreparation({}: {
           <div className="title">
             <p>Step3. 以下から空き枠をご予約ください。</p>
           </div>
-          <Calendly />
+          <Calendly setCalendlyState={setCalendlyState} />
         </>
       )}
 
-      {user && notText && (
+      {user && notText && calendlyState === CalendlyState.datetimeSelected && (
         <div>
           <div className="title">
             <p>Step4. こちらより予約を確認し、事前質問にお答えください</p>
