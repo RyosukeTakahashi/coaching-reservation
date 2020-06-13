@@ -21,6 +21,29 @@ export const otherTalkThemeAtom = atom({
   default: "",
 });
 
+export const calendlyStateAtom = atom({
+  key: "calendlyState",
+  default: 1000,
+});
+
+export const calendlySettingAtom = atom({
+  key: "calendlyState",
+  default: {
+    url: "https://calendly.com/ryo-murakami/meeting",
+    prefill: {
+      name: "",
+      email: "",
+      customAnswers: {
+        a1: "",
+      },
+    },
+    styles: {
+      height: "950px",
+    },
+    text: "予約はこちらから",
+  },
+});
+
 export const userAtom = atom({
   key: "user",
   default: { uid: "", displayName: "", email: "", photoUrl: "" },

@@ -1,17 +1,14 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect } from "react";
 import {
   useUserState,
   radioAnswerWithName,
   checkboxAnswerWithName,
   otherTalkThemeAtom,
+  calendlySettingAtom,
+  calendlyStateAtom,
 } from "../../src/atoms";
 import { useRecoilState } from "recoil";
-import {
-  InlineWidget,
-  PopupText,
-  PopupWidget,
-  CalendlyEventListener,
-} from "react-calendly";
+import { InlineWidget, PopupText, CalendlyEventListener } from "react-calendly";
 import dynamic from "next/dynamic";
 import firebase from "../../firebase/clientApp";
 
@@ -26,10 +23,7 @@ type radioOption = {
 };
 
 const RadioOption: FC<radioOption> = (props: { value; label; radioName }) => {
-  const [formState, setFormState] = useRecoilState(
-    radioAnswerWithName(props.radioName)
-  );
-  console.log(formState);
+  const [, setFormState] = useRecoilState(radioAnswerWithName(props.radioName));
   return (
     <div className="radio_option">
       <label>
@@ -81,7 +75,6 @@ const CheckBoxOption: FC<checkBoxOption> = (props: {
   const [checkboxState, setCheckboxState] = useRecoilState(
     checkboxAnswerWithName(props.radioName)
   );
-  console.log(checkboxState);
 
   return (
     <div className="radio_option">
@@ -149,11 +142,11 @@ const radioSettings: { [s: string]: radioQuestionProps } = {
     ),
   },
   [meetOrVideo]: {
-    title: "どの方法をご希望でしょうか？",
+    title: "Step1. ご希望の方法をお選びください",
     options: generateOptions(
       [
-        { value: "face2face", label: "対面" },
-        { value: "video", label: "ビデオチャット" },
+        { value: "対面", label: "対面" },
+        { value: "ビデオチャット", label: "ビデオチャット" },
         { value: "text", label: "テキスト" },
       ],
       meetOrVideo
@@ -182,32 +175,6 @@ const radioSettings: { [s: string]: radioQuestionProps } = {
   },
 };
 
-//widget.jsに処理を加えられるかも？
-//checkbox とかはマージしてprefill
-const calendlySetting = {
-  url: "https://calendly.com/ryo-murakami/meeting",
-  prefill: {
-    name: "",
-    email: "",
-  },
-  styles: {
-    height: "1000px",
-  },
-  text: "予約はこちらから",
-};
-
-//refactor
-//前のが表示＆特定の値なら、表示、stateOfFormerComponent的な。あるいは非表示なら隠すとか。
-//あるいは shown: 2 (2番めまでは表示)的なstateを持って、選択肢によってstateの変更→表示変更。にする。
-
-//予約完了event listener
-//→マイページ（できれば予約日表示）。
-//2. 何を話したいか（選択肢＆自由記述）
-//3. なぜ村上に申請したか
-//4. どう検索して村上を見つけたか
-//5. 他のOBとも複数話されている方は、それによって何を知り、追加で何を知りたいのか。
-// 性格診断→SNS紹介
-
 function OtherTalkTheme() {
   const [otherTalkTheme, setOtherTalkTheme] = useRecoilState(
     otherTalkThemeAtom
@@ -224,84 +191,92 @@ function OtherTalkTheme() {
 function LoginRecommendationText() {
   return (
     <div>
-      Googleログインすると、
-      <br />
       ・予約時の手入力が減り、
       <br />
-      ・Googleカレンダーに予定が自動記入されます。
-      <br />
-      Googleアカウントをお持ちでない方は、カレンダーの空き枠指定時に記入願います。
+      ・予約後、Googleカレンダーに予定が自動記入されます。
     </div>
   );
 }
 
 enum CalendlyState {
-  eventTypeViewed = 1,
-  dateTimeSelected,
-  eventScheduled,
+  datetimeSelected,
+  scheduled,
 }
+
+const Calendly = React.memo(() => {
+  const [calendlySetting] = useRecoilState(calendlySettingAtom);
+  const onScheduled = React.useCallback(() => {
+    document
+      .getElementsByClassName("calendly-inline-widget")[0]
+      .setAttribute("style", "height: 750px;");
+  }, []);
+  return (
+    <CalendlyEventListener onEventScheduled={onScheduled}>
+      <InlineWidget {...calendlySetting} />
+    </CalendlyEventListener>
+  );
+});
 
 export default function CoachingPreparation({}: {
   staticCollection: { name: string }[];
   allPostsData: { date: string; title: string; id: string }[];
 }) {
-  const [meetState] = useRecoilState(radioAnswerWithName(radioNameMeet));
   const [meetOrVideoState] = useRecoilState(radioAnswerWithName(meetOrVideo));
-  const [talkThemeState] = useRecoilState(checkboxAnswerWithName(talkTheme));
-  const [otherTalkTheme] = useRecoilState(otherTalkThemeAtom);
-  const [user, loadingUser] = useUserState();
-  if (!loadingUser && user) {
-    calendlySetting.prefill = {
-      name: user.displayName,
-      email: user.email,
-    };
-  }
-  const talkThemeChosen = talkThemeState.length > 0;
-  const showLogin = !user && talkThemeChosen;
-  const [calendlyState, setCalendlyState] = useState(10);
-  console.log(user);
-  if (calendlyState === CalendlyState.eventTypeViewed) {
-    console.log("eventViewed");
-  }
+  const [user, , loadingUser] = useUserState();
+  const [calendlySetting, setCalendlySetting] = useRecoilState(
+    calendlySettingAtom
+  );
+  useEffect(() => {
+    if (!loadingUser && user) {
+      setCalendlySetting({
+        ...calendlySetting,
+        prefill: {
+          name: user.displayName,
+          email: user.email,
+          customAnswers: {
+            a1: meetOrVideoState,
+          },
+        },
+      });
+    }
+  }, [meetOrVideoState]);
+
+  const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
     <main className={"form"}>
+      <p>相談/コーチングを依頼される方は、以下よりご予約願います。</p>
       <RadioQuestion {...radioSettings[meetOrVideo]} />
-      {["video", "face2face"].includes(meetOrVideoState) && (
-        <>
-          <CheckboxQuestion {...radioSettings[talkTheme]} />
-          その他：
-          <div>
-            <OtherTalkTheme />
-          </div>
-        </>
+
+      {notText && (
+        <div className="title">
+          <p>Step2. Googleログインをお願いします。</p>
+        </div>
       )}
-      {showLogin && (
+
+      {!user && notText && (
         <>
           <LoginRecommendationText />
           <AuthWithNoSSR />
         </>
       )}
 
-      {user && (
-        <button onClick={() => firebase.auth().signOut()}>Log Out</button>
+      {user && notText && (
+        <>
+          ログイン済みです。
+          <button onClick={() => firebase.auth().signOut()}>Log Out</button>
+          <div className="title">
+            <p>Step3. 以下から空き枠をご予約ください。</p>
+          </div>
+          <Calendly />
+        </>
       )}
 
-      {talkThemeChosen && (
-        <>
-          <CalendlyEventListener
-            onEventTypeViewed={function noRefCheck() {
-              setCalendlyState(CalendlyState.eventTypeViewed);
-            }}
-            onDateAndTimeSelected={function noRefCheck() {
-              setCalendlyState(CalendlyState.dateTimeSelected);
-            }}
-            onEventScheduled={function noRefCheck() {
-              setCalendlyState(CalendlyState.eventScheduled);
-            }}
-          >
-            <InlineWidget {...calendlySetting} />
-          </CalendlyEventListener>
-        </>
+      {user && notText && (
+        <div>
+          <div className="title">
+            <p>Step4. こちらより予約を確認し、事前質問にお答えください</p>
+          </div>
+        </div>
       )}
     </main>
   );
