@@ -1,7 +1,6 @@
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "../firebase/clientApp";
 import React from "react";
-import { useUser } from "../context/userContext";
 import * as firebaseui from "firebaseui";
 const uiConfig = {
   signInFlow: "popup",
@@ -18,30 +17,11 @@ const uiConfig = {
 };
 
 export default function Auth() {
-  const { loadingUser, user } = useUser();
-
   return (
-    <>
-      <h2>Auth. Sign in/out.</h2>
-      {loadingUser && (
-        <div>
-          <p>You are logged in. Loading user</p>
-        </div>
-      )}
-      {!loadingUser && !user && (
-        <StyledFirebaseAuth
-          uiCallback={(ui) => ui.disableAutoSignIn()}
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
-        />
-      )}
-      {user && (
-        <div>
-          <p>You are Logged in.</p>
-          <p>sub collection: {user.reservations[0].coachName}</p>
-          <button onClick={() => firebase.auth().signOut()}>Log Out</button>
-        </div>
-      )}
-    </>
+    <StyledFirebaseAuth
+      uiCallback={(ui) => ui.disableAutoSignIn()}
+      uiConfig={uiConfig}
+      firebaseAuth={firebase.auth()}
+    />
   );
 }

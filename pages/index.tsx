@@ -9,12 +9,12 @@ import utilStyles from "../styles/utils.module.css";
 import firebase from "../firebase/clientApp";
 import { LocalStateExample } from "../components/localStateExample";
 import { BlogList } from "../components/BlogList";
-import { setCookie } from "nookies";
+// import { setCookie } from "nookies";
+// setCookie(null, "nextJsBlog", "value", { sameSite: "None", secure: true });
 
 const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
   ssr: false,
 });
-setCookie(null, "nextJsBlog", "value", { sameSite: "None", secure: true });
 
 export default function Home({
   staticCollection,
