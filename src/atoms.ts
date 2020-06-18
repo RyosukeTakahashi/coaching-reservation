@@ -61,7 +61,7 @@ type User = {
   photoURL: string;
 };
 
-export const useUserState = (): [User, () => void, boolean] => {
+export const useUser = (): [User, () => void, boolean] => {
   const [user, setUser] = useRecoilState(userAtom);
   const [loadingUser, setLoadingUser] = useRecoilState(userLoadingAtom);
 

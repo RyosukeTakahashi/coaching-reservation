@@ -6,3 +6,19 @@ declare module "remark-html" {
 interface User {
   name: string;
 }
+
+interface CoachName {
+  coachName: string;
+}
+
+type radioOption = {
+  value: string;
+  label: string;
+  radioName: string;
+};
+
+type checkBoxOption = {
+  value: string;
+  label: string;
+  radioName: string;
+};

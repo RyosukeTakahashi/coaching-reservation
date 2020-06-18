@@ -1,5 +1,6 @@
 import React from "react";
 import { useDocument, useCollection } from "@nandorojo/swr-firestore";
+import { useUser } from "../src/atoms";
 
 export default function ClientSide(props: {
   setName: React.Dispatch<React.SetStateAction<string>>;
@@ -8,9 +9,12 @@ export default function ClientSide(props: {
     listen: true,
   });
 
-  const { data: collection, error: collectionError } = useCollection<User>(
-    "users"
+  const [user] = useUser();
+
+  const { data: collection, error: collectionError } = useCollection<CoachName>(
+    `users/${user.uid}/reservation`
   );
+
   const { update } = useDocument<User>(`users/sample`);
 
   if (error) return <div>failed to load</div>;
@@ -20,7 +24,7 @@ export default function ClientSide(props: {
   return (
     <>
       <h2>client side rendering</h2>
-      {/*<div>only showing collection: {collection[0].name}</div>*/}
+      {user && <div>only showing collection: {collection[0].coachName}</div>}
       <div>showing and listening to firestore change: {data.name}</div>
       <div>onBlur set firestore doc. Resulting in change of above.</div>
       <input

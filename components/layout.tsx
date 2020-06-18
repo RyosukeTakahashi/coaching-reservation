@@ -3,7 +3,7 @@ import styles from "./layout.module.css";
 import utilStyles from "../styles/utils.module.css";
 import Link from "next/link";
 import React from "react";
-import { useUserState } from "../src/atoms";
+import { useUser } from "../src/atoms";
 
 const defaultName = "Login to show your name";
 export const siteTitle = "Next.js Sample Website";
@@ -15,7 +15,7 @@ export default function Layout({
   children: React.ReactNode;
   home?: boolean;
 }) {
-  const [user] = useUserState();
+  const [user] = useUser();
 
   const name = user ? user.displayName : defaultName;
   const profileImgUrl = user ? user.photoURL : "/images/userIcon.png";
