@@ -9,13 +9,14 @@ export default function ClientSide(props: {
     listen: true,
   });
 
-  const [user] = useUser();
-
-  const { data: collection, error: collectionError } = useCollection<CoachName>(
-    `users/${user.uid}/reservation`
-  );
-
+  const [user, , loadingUser] = useUser();
   const { update } = useDocument<User>(`users/sample`);
+
+  const uid = user === null ? "loading" : user.uid;
+  const { data: collection, error: collectionError } = useCollection<CoachName>(
+    `users/${uid}/reservation`
+  );
+  const { data: newData, set } = useDocument(`users/${"hofdsa"}`);
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>Loading</div>;
@@ -24,7 +25,9 @@ export default function ClientSide(props: {
   return (
     <>
       <h2>client side rendering</h2>
-      {user && <div>only showing collection: {collection[0].coachName}</div>}
+      {user && (
+        <div>showing user.reservation: {user.reservations[0].coachName}</div>
+      )}
       <div>showing and listening to firestore change: {data.name}</div>
       <div>onBlur set firestore doc. Resulting in change of above.</div>
       <input
@@ -34,7 +37,8 @@ export default function ClientSide(props: {
           props.setName(e.target.value)
         }
         onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-          update({ name: e.target.value })
+          // update({ name: e.target.value })
+          set({ hello: "good" })
         }
       />
     </>

@@ -17,8 +17,10 @@ import {
 } from "../src/atoms";
 import { useRecoilState } from "recoil";
 import { otherTalkThemeAtom } from "../src/atoms";
+import { orderBy } from "@firebase/firestore/dist/packages/firestore/test/util/helpers";
 
-//firebaseで送信
+//firebaseで取得
+//firebaseで送信送信
 export default function MyPage({}: {}) {
   const [otherOBTalk, setOtherOBTalk] = useState("");
   const [howFoundMurakami, setHowFoundMurakami] = useState("");
@@ -40,15 +42,40 @@ export default function MyPage({}: {}) {
   };
   const [user, , loadingUser] = useUser();
 
-  const { data, loading, error, update } = useDocument(`users/${user.uid}`);
+  const uid = user === null ? "loading" : user.uid;
+  const { data: reservations, loading, error } = useCollection(
+    `users/${uid}/reservations`,
+    {
+      limit: 1,
+      orderBy: ["datetime", "desc"],
+      listen: true,
+    }
+  );
 
-  const savePreparationAnswer = () => {};
+  const latestReservation =
+    reservations !== undefined
+      ? reservations[0]
+      : { id: 1, datetime: { seconds: 2000000000 } };
+  const {
+    data: reservationDoc,
+    update,
+    loading: docLoading,
+    error: docError,
+  } = useDocument(`users/${uid}/reservations/${latestReservation.id}`);
+  console.log(latestReservation);
 
+  const datetime = new Date(latestReservation.datetime.seconds * 1000);
+  const datetimeStr = datetime.toLocaleString();
+
+  if (error) return <div>failed to load col</div>;
+  if (!reservations) return <div>Loading col</div>;
+  if (docError) return <div>failed to load doc</div>;
+  if (!reservationDoc) return <div>Loading doc</div>;
   return (
     <>
       <div className={"reservation"}>
         <h2>直近の予約</h2>
-        <div>予約日：2020-06-14</div>
+        <div>予約日：{datetimeStr}</div>
         <h3>事前質問</h3>
 
         <div className="title">
@@ -57,6 +84,7 @@ export default function MyPage({}: {}) {
             name="otherOBTalk"
             value={otherOBTalk}
             onChange={(e) => setOtherOBTalk(e.target.value)}
+            onBlur={(e) => update({ otherOBTalk })}
           />
         </div>
 
@@ -73,11 +101,12 @@ export default function MyPage({}: {}) {
             name="howDidFindMurakami"
             value={howFoundMurakami}
             onChange={(e) => setHowFoundMurakami(e.target.value)}
+            onBlur={(e) => update({ howFoundMurakami })}
           />
         </div>
 
         <div>
-          <button>保存</button>
+          <button onClick={() => update({ ...preparationAnswer })}>保存</button>
         </div>
       </div>
       <div>

@@ -1,6 +1,7 @@
 import { atom, useRecoilState } from "recoil";
 import { useEffect } from "react";
 import firebase from "../firebase/clientApp";
+import { useCollection, useDocument } from "@nandorojo/swr-firestore";
 
 export const radioAnswerWithName = (questionName: string) => {
   return atom({
@@ -59,6 +60,13 @@ type User = {
   displayName: string;
   email: string;
   photoURL: string;
+  reservations: reservation[];
+};
+
+type reservation = {
+  datetime: string;
+  talkTheme: string[];
+  coachName: string[];
 };
 
 export const useUser = (): [User, () => void, boolean] => {
@@ -76,13 +84,14 @@ export const useUser = (): [User, () => void, boolean] => {
           const userDocRef = db.doc(`users/${uid}`);
           const userDoc = await userDocRef.get();
           const reservationSnapshot = await userDocRef
-            .collection("reservation")
+            .collection("reservations")
             .get();
           const reservations = reservationSnapshot.docs.map((doc) =>
             doc.data()
           );
           //add user to firestore if no document.
           if (userDoc.data() === undefined) {
+            console.log("no user found");
             await db
               .collection("users")
               .doc(uid)

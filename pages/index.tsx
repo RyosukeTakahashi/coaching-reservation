@@ -9,6 +9,7 @@ import utilStyles from "../styles/utils.module.css";
 import firebase from "../firebase/clientApp";
 import { LocalStateExample } from "../components/localStateExample";
 import { BlogList } from "../components/BlogList";
+import { useUser } from "../src/atoms";
 
 const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
   ssr: false,
@@ -32,7 +33,7 @@ export default function Home({
       setName(name.replace(staticCollection[1].name, ""));
     }
   };
-
+  const [user] = useUser();
   return (
     <Layout home>
       <Head>
@@ -41,7 +42,10 @@ export default function Home({
       <section className={utilStyles.headingMd}>
         <h1>Next.js boiler-plates</h1>
       </section>
-      <AuthWithNoSSR />
+      {user === null && <AuthWithNoSSR />}
+      {user && (
+        <button onClick={() => firebase.auth().signOut()}>Log Out</button>
+      )}
       <LocalStateExample
         name={name}
         onClick={() => toggleText()}
