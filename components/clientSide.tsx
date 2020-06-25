@@ -9,8 +9,7 @@ export default function ClientSide(props: {
     listen: true,
   });
 
-  const [user, , loadingUser] = useUser();
-  const { update } = useDocument<User>(`users/sample`);
+  const [user] = useUser();
 
   const uid = user === null ? "loading" : user.uid;
   const { data: collection, error: collectionError } = useCollection<CoachName>(

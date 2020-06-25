@@ -2,6 +2,7 @@ import { atom, useRecoilState } from "recoil";
 import { useEffect } from "react";
 import firebase from "../firebase/clientApp";
 import { useCollection, useDocument } from "@nandorojo/swr-firestore";
+import { SetterOrUpdater } from "recoil/dist";
 
 export const radioAnswerWithName = (questionName: string) => {
   return atom({
@@ -47,7 +48,13 @@ export const calendlySettingAtom = atom({
 
 export const userAtom = atom({
   key: "user",
-  default: { uid: "", displayName: "", email: "", photoUrl: "" },
+  default: {
+    uid: "",
+    displayName: "",
+    email: "",
+    photoURL: "",
+    reservations: [],
+  },
 });
 
 export const userLoadingAtom = atom({
@@ -55,6 +62,7 @@ export const userLoadingAtom = atom({
   default: false,
 });
 
+//global.d.tsに後に以降
 type User = {
   uid: string;
   displayName: string;
@@ -64,17 +72,18 @@ type User = {
 };
 
 type reservation = {
-  datetime: string;
+  datetime: Number;
   talkTheme: string[];
   coachName: string[];
 };
 
-export const useUser = (): [User, () => void, boolean] => {
+export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
   const [user, setUser] = useRecoilState(userAtom);
   const [loadingUser, setLoadingUser] = useRecoilState(userLoadingAtom);
 
   useEffect(() => {
     // Listen authenticated user
+    // https://firebase.google.com/docs/auth/web/manage-users
     const unsubscriber = firebase.auth().onAuthStateChanged(async (user) => {
       try {
         if (user) {
@@ -85,6 +94,7 @@ export const useUser = (): [User, () => void, boolean] => {
           const userDoc = await userDocRef.get();
           const reservationSnapshot = await userDocRef
             .collection("reservations")
+            .orderBy("datetime", "desc")
             .get();
           const reservations = reservationSnapshot.docs.map((doc) =>
             doc.data()

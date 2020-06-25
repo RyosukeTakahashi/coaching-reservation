@@ -17,18 +17,48 @@ import {
 } from "../src/atoms";
 import { useRecoilState } from "recoil";
 import { otherTalkThemeAtom } from "../src/atoms";
-import { orderBy } from "@firebase/firestore/dist/packages/firestore/test/util/helpers";
+import { useRecoilValue } from "recoil/dist";
 
-//firebaseで取得
-//firebaseで送信送信
+//firebaseで取得してinputにして更新したら送信
 export default function MyPage({}: {}) {
-  const [otherOBTalk, setOtherOBTalk] = useState("");
+  const [user] = useUser();
+  const uid = user === null ? "loading" : user.uid;
+  if (user.reservations !== null) console.log(user.reservations[0]);
+  // const latestReservation = user === null ? { id: 0 } : user.reservations[0];
+  const { data: reservations, loading, error } = useCollection(
+    `users/${uid}/reservations`,
+    {
+      limit: 1,
+      orderBy: ["datetime", "desc"],
+      listen: true,
+    }
+  );
+  const latestReservation =
+    reservations !== undefined
+      ? reservations[0]
+      : {
+          id: 1,
+          datetime: { seconds: 2000000000 },
+          otherOBTalk: "default talk",
+        };
+  const {
+    // data: reservationDoc,
+    update,
+    loading: docLoading,
+    error: docError,
+  } = useDocument(`users/${uid}/reservations/${latestReservation.id}`);
+
+  const datetime = new Date(latestReservation.datetime.seconds * 1000);
+  const datetimeStr = datetime.toLocaleString();
+  //useeffect内で使う。
+  const [otherOBTalk, setOtherOBTalk] = useState("defaultnitila state");
   const [howFoundMurakami, setHowFoundMurakami] = useState("");
-  const [talkThemeState] = useRecoilState(checkboxAnswerWithName(talkTheme));
-  const [mbtiState] = useRecoilState(radioAnswerWithName(mbti));
-  const [aOrTState] = useRecoilState(radioAnswerWithName(aOrT));
-  const [otherTalkTheme] = useRecoilState(otherTalkThemeAtom);
+  const talkThemeState = useRecoilValue(checkboxAnswerWithName(talkTheme));
+  const mbtiState = useRecoilValue(radioAnswerWithName(mbti));
+  const aOrTState = useRecoilValue(radioAnswerWithName(aOrT));
+  const otherTalkTheme = useRecoilValue(otherTalkThemeAtom);
   const [high5, setHigh5] = useState("");
+
   const preparationAnswer = {
     otherOBTalk,
     talkThemeState,
@@ -40,44 +70,25 @@ export default function MyPage({}: {}) {
     aOrTState,
     high5,
   };
-  const [user, , loadingUser] = useUser();
 
-  const uid = user === null ? "loading" : user.uid;
-  const { data: reservations, loading, error } = useCollection(
-    `users/${uid}/reservations`,
-    {
-      limit: 1,
-      orderBy: ["datetime", "desc"],
-      listen: true,
-    }
-  );
+  useEffect(() => {
+    setOtherOBTalk(latestReservation.otherOBTalk);
+  }, [latestReservation]);
 
-  const latestReservation =
-    reservations !== undefined
-      ? reservations[0]
-      : { id: 1, datetime: { seconds: 2000000000 } };
-  const {
-    data: reservationDoc,
-    update,
-    loading: docLoading,
-    error: docError,
-  } = useDocument(`users/${uid}/reservations/${latestReservation.id}`);
-  console.log(latestReservation);
-
-  const datetime = new Date(latestReservation.datetime.seconds * 1000);
-  const datetimeStr = datetime.toLocaleString();
-
+  console.log("reservations", reservations);
+  console.log("otherOBtalk", otherOBTalk);
+  console.log("latest", latestReservation.otherOBTalk);
   if (error) return <div>failed to load col</div>;
   if (!reservations) return <div>Loading col</div>;
   if (docError) return <div>failed to load doc</div>;
-  if (!reservationDoc) return <div>Loading doc</div>;
+  // if (!reservationDoc) return <div>Loading doc</div>;
   return (
     <>
       <div className={"reservation"}>
         <h2>直近の予約</h2>
         <div>予約日：{datetimeStr}</div>
         <h3>事前質問</h3>
-
+        {otherOBTalk}
         <div className="title">
           <p>Q1. 今まで、他のOB/OGとはどのようなことを話されましたか？</p>
           <textarea
