@@ -1,3 +1,4 @@
+import firebase from "../firebase/clientApp";
 import React, { useEffect, useState } from "react";
 import { CheckboxQuestion } from "../components/CheckboxQuestion";
 import {
@@ -17,6 +18,8 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil/dist";
 import useSWR from "swr";
 import { setReservation, getReservations } from "../src/fetchers";
+import { querySnapshot } from "@firebase/firestore/dist/packages/firestore/test/util/api_helpers";
+import { error } from "next/dist/build/output/log";
 
 //firebaseで取得してinputにして更新したら送信
 export default function MyPage({}: {}) {
@@ -26,6 +29,7 @@ export default function MyPage({}: {}) {
   const [talkThemeState, setTalkThemeState] = useRecoilState(
     checkboxAnswerWithName(talkThemeStr)
   );
+  const [reservations, setReservations] = useState([{ id: 1 }]);
   const [otherTalkTheme, setOtherTalkTheme] = useState("default talk theme");
   const [howFoundMurakami, setHowFoundMurakami] = useState(
     "how found murakami"
@@ -46,22 +50,43 @@ export default function MyPage({}: {}) {
     high5,
   };
 
-  const { data: reservations, error } = useSWR(
-    user ? user.uid : null,
-    getReservations
-  );
+  // const { data: reservations, error } = useSWR(
+  //   user ? user.uid : null,
+  //   getReservations
+  // );
 
   useEffect(() => {
-    if (reservations !== undefined) {
-      const latestReservation = reservations[0];
-      setOtherOBTalk(latestReservation.otherOBTalk);
-      setOtherTalkTheme(latestReservation.otherTalkTheme);
-      setTalkThemeState(latestReservation.talkThemeState);
-      setHowFoundMurakami(latestReservation.howFoundMurakami);
-    }
-  }, [reservations]);
+    // if (reservations !== undefined) {
+    //   const latestReservation = reservations[0];
+    //   setOtherOBTalk(latestReservation.otherOBTalk);
+    //   setOtherTalkTheme(latestReservation.otherTalkTheme);
+    //   setTalkThemeState(latestReservation.talkThemeState);
+    //   setHowFoundMurakami(latestReservation.howFoundMurakami);
+    // }
 
-  if (error) return <div>failed to load col</div>;
+    const db = firebase.firestore();
+    console.log(user);
+    if (user.uid === "") return;
+    const unsubscribe = db
+      .collection(`users/${user.uid}/reservations`)
+      .onSnapshot(async (querySnapshot) => {
+        const reservations = await querySnapshot.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        });
+        const latestReservation = reservations[0];
+        setReservations(reservations);
+        setOtherOBTalk(latestReservation.otherOBTalk);
+        setOtherTalkTheme(latestReservation.otherTalkTheme);
+        setTalkThemeState(latestReservation.talkThemeState);
+        setHowFoundMurakami(latestReservation.howFoundMurakami);
+      });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
+
+  // if (error) return <div>failed to load col</div>;
   if (!user) return <div>loading user</div>;
   return (
     <>
