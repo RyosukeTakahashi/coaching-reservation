@@ -1,123 +1,120 @@
 import React, { useEffect, useState } from "react";
 import { CheckboxQuestion } from "../components/CheckboxQuestion";
-import { useDocument, useCollection } from "@nandorojo/swr-firestore";
-
 import {
-  radioSettings,
-  talkTheme,
-  mbti,
   aOrT,
+  mbti,
+  radioSettings,
+  talkTheme as talkThemeStr,
 } from "../src/settings/inputOption";
 import { OtherTalkTheme } from "../components/OtherTalkTheme";
 import { RadioQuestion } from "../components/RadioQuestion";
 import {
   checkboxAnswerWithName,
+  otherTalkThemeAtom,
   radioAnswerWithName,
   useUser,
 } from "../src/atoms";
-import { useRecoilState } from "recoil";
-import { otherTalkThemeAtom } from "../src/atoms";
-import { useRecoilValue } from "recoil/dist";
+import { useRecoilState, useRecoilValue } from "recoil/dist";
+import useSWR from "swr";
+import { setReservation, getReservations } from "../src/fetchers";
 
 //firebaseで取得してinputにして更新したら送信
 export default function MyPage({}: {}) {
   const [user] = useUser();
-  const uid = user === null ? "loading" : user.uid;
-  if (user.reservations !== null) console.log(user.reservations[0]);
-  // const latestReservation = user === null ? { id: 0 } : user.reservations[0];
-  const { data: reservations, loading, error } = useCollection(
-    `users/${uid}/reservations`,
-    {
-      limit: 1,
-      orderBy: ["datetime", "desc"],
-      listen: true,
-    }
+
+  const [otherOBTalk, setOtherOBTalk] = useState("default state");
+  const [talkThemeState, setTalkThemeState] = useRecoilState(
+    checkboxAnswerWithName(talkThemeStr)
   );
-  const latestReservation =
-    reservations !== undefined
-      ? reservations[0]
-      : {
-          id: 1,
-          datetime: { seconds: 2000000000 },
-          otherOBTalk: "default talk",
-        };
-  const {
-    // data: reservationDoc,
-    update,
-    loading: docLoading,
-    error: docError,
-  } = useDocument(`users/${uid}/reservations/${latestReservation.id}`);
-
-  const datetime = new Date(latestReservation.datetime.seconds * 1000);
-  const datetimeStr = datetime.toLocaleString();
-  //useeffect内で使う。
-  const [otherOBTalk, setOtherOBTalk] = useState("defaultnitila state");
-  const [howFoundMurakami, setHowFoundMurakami] = useState("");
-  const talkThemeState = useRecoilValue(checkboxAnswerWithName(talkTheme));
-  const mbtiState = useRecoilValue(radioAnswerWithName(mbti));
-  const aOrTState = useRecoilValue(radioAnswerWithName(aOrT));
-  const otherTalkTheme = useRecoilValue(otherTalkThemeAtom);
-  const [high5, setHigh5] = useState("");
-
+  const [otherTalkTheme, setOtherTalkTheme] = useState("default talk theme");
+  const [howFoundMurakami, setHowFoundMurakami] = useState(
+    "how found murakami"
+  );
   const preparationAnswer = {
     otherOBTalk,
     talkThemeState,
     otherTalkTheme,
     howFoundMurakami,
   };
+
+  const mbtiState = useRecoilValue(radioAnswerWithName(mbti));
+  const aOrTState = useRecoilValue(radioAnswerWithName(aOrT));
+  const [high5, setHigh5] = useState("");
   const assessment = {
     mbtiState,
     aOrTState,
     high5,
   };
 
-  useEffect(() => {
-    setOtherOBTalk(latestReservation.otherOBTalk);
-  }, [latestReservation]);
+  const { data: reservations, error } = useSWR(
+    user ? user.uid : null,
+    getReservations
+  );
 
-  console.log("reservations", reservations);
-  console.log("otherOBtalk", otherOBTalk);
-  console.log("latest", latestReservation.otherOBTalk);
+  useEffect(() => {
+    if (reservations !== undefined) {
+      const latestReservation = reservations[0];
+      setOtherOBTalk(latestReservation.otherOBTalk);
+      setOtherTalkTheme(latestReservation.otherTalkTheme);
+      setTalkThemeState(latestReservation.talkThemeState);
+      setHowFoundMurakami(latestReservation.howFoundMurakami);
+    }
+  }, [reservations]);
+
   if (error) return <div>failed to load col</div>;
-  if (!reservations) return <div>Loading col</div>;
-  if (docError) return <div>failed to load doc</div>;
-  // if (!reservationDoc) return <div>Loading doc</div>;
+  if (!user) return <div>loading user</div>;
   return (
     <>
       <div className={"reservation"}>
         <h2>直近の予約</h2>
-        <div>予約日：{datetimeStr}</div>
+        {/*<div>予約日：{datetimeStr}</div>*/}
         <h3>事前質問</h3>
-        {otherOBTalk}
         <div className="title">
           <p>Q1. 今まで、他のOB/OGとはどのようなことを話されましたか？</p>
           <textarea
             name="otherOBTalk"
             value={otherOBTalk}
             onChange={(e) => setOtherOBTalk(e.target.value)}
-            onBlur={(e) => update({ otherOBTalk })}
+            onBlur={() =>
+              setReservation(user.uid, reservations[0].id, preparationAnswer)
+            }
           />
         </div>
 
         <div className="title">
           <p>Q2. どんな内容をお話になりたいですか？</p>
         </div>
-
-        <CheckboxQuestion {...radioSettings[talkTheme]} />
+        <CheckboxQuestion {...radioSettings[talkThemeStr]} />
         <div>その他</div>
-        <OtherTalkTheme />
+        <textarea
+          name="otherQuestion"
+          value={otherTalkTheme}
+          onChange={(e) => setOtherTalkTheme(e.target.value)}
+          onBlur={() =>
+            setReservation(user.uid, reservations[0].id, preparationAnswer)
+          }
+        />
+
         <div className="title">
           <p>Q3. どう検索して村上を見つけられましたか？</p>
           <textarea
             name="howDidFindMurakami"
             value={howFoundMurakami}
             onChange={(e) => setHowFoundMurakami(e.target.value)}
-            onBlur={(e) => update({ howFoundMurakami })}
+            onBlur={() =>
+              setReservation(user.uid, reservations[0].id, preparationAnswer)
+            }
           />
         </div>
 
         <div>
-          <button onClick={() => update({ ...preparationAnswer })}>保存</button>
+          <button
+            onClick={() =>
+              setReservation(user.uid, reservations[0].id, preparationAnswer)
+            }
+          >
+            保存
+          </button>
         </div>
       </div>
       <div>
@@ -139,8 +136,8 @@ export default function MyPage({}: {}) {
         <div className="title">結果のリンクをお貼りください。</div>
         <input
           name="high5"
-          value={high5}
-          onChange={(e) => setHigh5(e.target.value)}
+          // value={high5}
+          // onChange={(e) => setHigh5(e.target.value)}
         />
         <div>
           <button>保存</button>

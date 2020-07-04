@@ -31,13 +31,17 @@ const CheckBoxOption: FC<checkBoxOption> = (props: {
           value={props.value}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.target.checked === true) {
-              setCheckboxState([...checkboxState, e.target.value]);
+              setCheckboxState((oldCheckboxesState) => [
+                ...oldCheckboxesState,
+                e.target.value,
+              ]);
             } else {
-              setCheckboxState(
-                checkboxState.filter((choice) => choice !== e.target.value)
+              setCheckboxState((oldCheckboxesState) =>
+                oldCheckboxesState.filter((choice) => choice !== e.target.value)
               );
             }
           }}
+          checked={checkboxState.includes(props.value)}
         />
         {props.label}
       </label>

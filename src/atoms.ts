@@ -94,7 +94,7 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
           const userDoc = await userDocRef.get();
           const reservationSnapshot = await userDocRef
             .collection("reservations")
-            .orderBy("datetime", "desc")
+            // .orderBy("datetime", "desc") //datetimeがなければ取得できない
             .get();
           const reservations = reservationSnapshot.docs.map((doc) =>
             doc.data()
