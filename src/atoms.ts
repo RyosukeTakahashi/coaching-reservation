@@ -52,7 +52,6 @@ export const userAtom = atom({
     displayName: "",
     email: "",
     photoURL: "",
-    reservations: [],
   },
 });
 
@@ -67,9 +66,6 @@ type User = {
   displayName: string;
   email: string;
   photoURL: string;
-  // mbti: string;
-  // aOrT: string;
-  reservations: reservation[];
 };
 
 type reservation = {
@@ -93,14 +89,6 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
           const db = firebase.firestore();
           const userDocRef = db.doc(`users/${uid}`);
           const userDoc = await userDocRef.get();
-          const reservationSnapshot = await userDocRef
-            .collection("reservations")
-            // .orderBy("datetime", "desc") //datetimeがなければ取得できない
-            .get();
-          const reservations = reservationSnapshot.docs.map((doc) =>
-            doc.data()
-          );
-          const { mbti, aOrT, high5 } = userDoc.data();
           //add user to firestore if no document.
           if (userDoc.data() === undefined) {
             console.log("no user found");
@@ -110,7 +98,7 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
               .set({ displayNameInApp: displayName, photoURL });
           }
 
-          setUser({ uid, displayName, email, photoURL, reservations });
+          setUser({ uid, displayName, email, photoURL });
         } else setUser(null);
       } catch (error) {
         // Most probably a connection error. Handle appropriately.
