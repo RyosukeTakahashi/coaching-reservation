@@ -11,9 +11,6 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
   title;
   options;
 }) => {
-  const setFormState = useSetRecoilState(
-    radioAnswerWithName(props.options[0].radioName)
-  );
   return (
     <div className="question">
       <div className="title">
@@ -21,20 +18,15 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
       </div>
       <div className="options">
         {props.options.map((option, index) => (
-          <RadioOption {...option} setFormState={setFormState} key={index} />
+          <RadioOption {...option} key={index} />
         ))}
       </div>
     </div>
   );
 };
 
-const RadioOption: FC<radioOption> = (props: {
-  value;
-  label;
-  radioName;
-  setFormState;
-}) => {
-  // const setFormState = useSetRecoilState(radioAnswerWithName(props.radioName));
+const RadioOption: FC<radioOption> = (props: { value; label; radioName }) => {
+  const [radioState, setRadioState] = useRecoilState(radioAnswerWithName(props.radioName));
   return (
     <div className="radio_option">
       <label>
@@ -42,9 +34,10 @@ const RadioOption: FC<radioOption> = (props: {
           type="radio"
           name={props.radioName}
           value={props.value}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            props.setFormState(e.target.value)
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setRadioState(e.target.value);
+          }}
+          checked={props.value === radioState}
         />
         {props.label}
       </label>

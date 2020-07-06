@@ -16,10 +16,7 @@ import {
   useUser,
 } from "../src/atoms";
 import { useRecoilState, useRecoilValue } from "recoil/dist";
-import useSWR from "swr";
-import { setReservation, getReservations } from "../src/fetchers";
-import { querySnapshot } from "@firebase/firestore/dist/packages/firestore/test/util/api_helpers";
-import { error } from "next/dist/build/output/log";
+import { setReservation, setUserProfile } from "../src/fetchers";
 
 //firebaseで取得してinputにして更新したら送信
 export default function MyPage({}: {}) {
@@ -50,20 +47,7 @@ export default function MyPage({}: {}) {
     high5,
   };
 
-  // const { data: reservations, error } = useSWR(
-  //   user ? user.uid : null,
-  //   getReservations
-  // );
-
   useEffect(() => {
-    // if (reservations !== undefined) {
-    //   const latestReservation = reservations[0];
-    //   setOtherOBTalk(latestReservation.otherOBTalk);
-    //   setOtherTalkTheme(latestReservation.otherTalkTheme);
-    //   setTalkThemeState(latestReservation.talkThemeState);
-    //   setHowFoundMurakami(latestReservation.howFoundMurakami);
-    // }
-
     const db = firebase.firestore();
     console.log(user);
     if (user.uid === "") return;
@@ -86,7 +70,6 @@ export default function MyPage({}: {}) {
     };
   }, [user]);
 
-  // if (error) return <div>failed to load col</div>;
   if (!user) return <div>loading user</div>;
   return (
     <>
@@ -161,11 +144,13 @@ export default function MyPage({}: {}) {
         <div className="title">結果のリンクをお貼りください。</div>
         <input
           name="high5"
-          // value={high5}
-          // onChange={(e) => setHigh5(e.target.value)}
+          value={high5}
+          onChange={(e) => setHigh5(e.target.value)}
         />
         <div>
-          <button>保存</button>
+          <button onClick={() => setUserProfile(user.uid, assessment)}>
+            保存
+          </button>
         </div>
       </div>
     </>

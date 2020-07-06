@@ -1,7 +1,6 @@
 import { atom, useRecoilState } from "recoil";
 import { useEffect } from "react";
 import firebase from "../firebase/clientApp";
-import { useCollection, useDocument } from "@nandorojo/swr-firestore";
 import { SetterOrUpdater } from "recoil/dist";
 
 export const radioAnswerWithName = (questionName: string) => {

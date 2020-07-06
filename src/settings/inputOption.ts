@@ -37,12 +37,15 @@ export const radioSettings: { [s: string]: radioQuestionProps } = {
     title: "お話になりたい内容はなんでしょうか？",
     options: generateOptions(
       [
-        { value: "自己分析全般", label: "自己分析" },
-        { value: "企業や働き方を知りたい", label: "働き方を知りたい" },
+        { value: "自己分析", label: "自己分析" },
+        {
+          value: "企業や働き方について知りたい",
+          label: "企業や働き方について知りたい",
+        },
         { value: "強み/弱みを知りたい", label: "強み/弱みを知りたい" },
         {
-          value: "自分の軸を見つけたい, 持ちたい",
-          label: "自分の軸を見つけたい, 持ちたい",
+          value: "自分の軸について考えたい",
+          label: "自分の軸について考えたい",
         },
         { value: "目的/目標を設定したい", label: "目的/目標を設定したい" },
         {
