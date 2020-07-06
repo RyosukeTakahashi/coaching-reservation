@@ -1,7 +1,8 @@
 import React, { FC } from "react";
-import { radioAnswerWithName } from "../src/atoms";
+import { radioAnswerWithName, useUser } from "../src/atoms";
 import { useRecoilState } from "recoil";
 import { useSetRecoilState } from "recoil/dist";
+import { setUserProfile } from "../src/fetchers";
 
 export type radioQuestionProps = {
   title: string;
@@ -26,7 +27,11 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
 };
 
 const RadioOption: FC<radioOption> = (props: { value; label; radioName }) => {
-  const [radioState, setRadioState] = useRecoilState(radioAnswerWithName(props.radioName));
+  const [radioState, setRadioState] = useRecoilState(
+    radioAnswerWithName(props.radioName)
+  );
+  const [user] = useUser();
+  console.log(radioState);
   return (
     <div className="radio_option">
       <label>
@@ -34,8 +39,9 @@ const RadioOption: FC<radioOption> = (props: { value; label; radioName }) => {
           type="radio"
           name={props.radioName}
           value={props.value}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
             setRadioState(e.target.value);
+            await setUserProfile(user.uid, { [props.radioName]: e.target.value });
           }}
           checked={props.value === radioState}
         />

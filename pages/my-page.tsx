@@ -2,8 +2,8 @@ import firebase from "../firebase/clientApp";
 import React, { useEffect, useState } from "react";
 import { CheckboxQuestion } from "../components/CheckboxQuestion";
 import {
-  aOrT,
-  mbti,
+  aOrT as aOrTStr,
+  mbti as mbtiStr,
   radioSettings,
   talkTheme as talkThemeStr,
 } from "../src/settings/inputOption";
@@ -18,7 +18,11 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil/dist";
 import { setReservation, setUserProfile } from "../src/fetchers";
 
-//firebaseで取得してinputにして更新したら送信
+//todo: atom.tsでUserとったときにもうリアルタイムする？
+//todo: async とrecoilを組み合わせる？
+//todo: dataがある前提になってしまっているので、ない場合で動作するようにする
+//todo: typescriptっぽくなるようリファクタ
+
 export default function MyPage({}: {}) {
   const [user] = useUser();
 
@@ -38,15 +42,16 @@ export default function MyPage({}: {}) {
     howFoundMurakami,
   };
 
-  const mbtiState = useRecoilValue(radioAnswerWithName(mbti));
-  const aOrTState = useRecoilValue(radioAnswerWithName(aOrT));
+  const [mbti, setMbti] = useRecoilState(radioAnswerWithName(mbtiStr));
+  const [aOrT, setAOrT] = useRecoilState(radioAnswerWithName(aOrTStr));
   const [high5, setHigh5] = useState("");
   const assessment = {
-    mbtiState,
-    aOrTState,
+    mbti,
+    aOrT,
     high5,
   };
 
+  //listener for reservation collection
   useEffect(() => {
     const db = firebase.firestore();
     console.log(user);
@@ -64,7 +69,20 @@ export default function MyPage({}: {}) {
         setTalkThemeState(latestReservation.talkThemeState);
         setHowFoundMurakami(latestReservation.howFoundMurakami);
       });
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
 
+  //listener for user document
+  useEffect(() => {
+    const db = firebase.firestore();
+    if (user.uid === "") return;
+    const unsubscribe = db.doc(`users/${user.uid}`).onSnapshot(async (doc) => {
+      setAOrT(doc.data().aOrT);
+      setMbti(doc.data().mbti);
+      setHigh5(doc.data().high5);
+    });
     return () => {
       unsubscribe();
     };
@@ -134,8 +152,8 @@ export default function MyPage({}: {}) {
         >
           診断はこちら
         </a>
-        <RadioQuestion {...radioSettings[mbti]} />
-        <RadioQuestion {...radioSettings[aOrT]} />
+        <RadioQuestion {...radioSettings[mbtiStr]} />
+        <RadioQuestion {...radioSettings[aOrTStr]} />
         <h3>High5 Test</h3>
         <a href="https://high5test.com/test/" target={"_blank"}>
           診断はこちら

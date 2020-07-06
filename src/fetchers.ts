@@ -2,9 +2,7 @@ import firebase from "../firebase/clientApp";
 
 export const setReservation = async (uid, resId, resState) => {
   const db = firebase.firestore();
-  const reservationRef = await db
-    .doc(`users/${uid}/reservations/${resId}`)
-    .set(resState);
+  await db.doc(`users/${uid}/reservations/${resId}`).set(resState);
 };
 
 export const getReservations = async (uid) => {
@@ -20,8 +18,7 @@ export const getReservations = async (uid) => {
 };
 
 export const setUserProfile = async (uid, profile) => {
+  console.log(profile);
   const db = firebase.firestore();
-  const reservationRef = await db
-    .doc(`users/${uid}`)
-    .set(profile, { merge: true });
+  await db.doc(`users/${uid}`).set(profile, { merge: true });
 };

@@ -67,6 +67,8 @@ type User = {
   displayName: string;
   email: string;
   photoURL: string;
+  // mbti: string;
+  // aOrT: string;
   reservations: reservation[];
 };
 
@@ -98,6 +100,7 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
           const reservations = reservationSnapshot.docs.map((doc) =>
             doc.data()
           );
+          const { mbti, aOrT, high5 } = userDoc.data();
           //add user to firestore if no document.
           if (userDoc.data() === undefined) {
             console.log("no user found");
@@ -106,6 +109,7 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
               .doc(uid)
               .set({ displayNameInApp: displayName, photoURL });
           }
+
           setUser({ uid, displayName, email, photoURL, reservations });
         } else setUser(null);
       } catch (error) {
