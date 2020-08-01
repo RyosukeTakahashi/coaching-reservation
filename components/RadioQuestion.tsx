@@ -17,7 +17,7 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
       {/*<div className="text-xl mb-2">*/}
       {/*  <p>{props.title}</p>*/}
       {/*</div>*/}
-      <div className="options ml-4">
+      <div className="options">
         {props.options.map((option, index) => (
           <RadioOption {...option} key={index} />
         ))}
@@ -40,7 +40,10 @@ const RadioOption: FC<radioOption> = (props: { value; label; radioName }) => {
           value={props.value}
           onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
             setRadioState(e.target.value);
-            await setUserProfile(user.uid, { [props.radioName]: e.target.value });
+            if (user)
+              await setUserProfile(user.uid, {
+                [props.radioName]: e.target.value,
+              });
           }}
           checked={props.value === radioState}
         />

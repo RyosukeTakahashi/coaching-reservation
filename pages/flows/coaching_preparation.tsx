@@ -42,86 +42,112 @@ export default function CoachingPreparation({}: {
     }
   }, [meetOrVideoState]);
 
+  const [boxCss, setBoxCss] = useState("");
+
+  useEffect(() => {
+    if (notText) setBoxCss("mt-4 px-3 py-4 ");
+    if (!notText) setBoxCss("")
+  });
+
   const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
-    <main className={"form ml-4"}>
-      <p className={"mt-6"}>
-        相談/コーチング依頼の方は、<br/>以下の手順でご予約願います。
-      </p>
-
-      <div className="mt-6">
-        <div className="text-xl mb-2">
-          <p>1. ご希望の方法をお選びください</p>
+    <div className="py-3 bg-teal-200 min-h-screen">
+      <main className={"form px-3 container mx-md"}>
+        <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+          <p>
+            相談/コーチング依頼の方は、
+            <br />
+            以下の手順でご予約願います。
+          </p>
         </div>
 
-        <RadioQuestion {...radioSettings[meetOrVideo]} />
-      </div>
-      {notText && (
-        <div className="mt-6">
-          <div className="text-xl mb-2">
-            <p>2. Googleでログインしてください</p>
+        <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+          <div className="text-lg mb-3">
+            <p>ご希望の方法をお選びください</p>
           </div>
+
+          <RadioQuestion {...radioSettings[meetOrVideo]} />
         </div>
-      )}
 
-      {!user && notText && (
-        <>
-          <LoginRecommendationText />
-          <AuthWithNoSSR />
-        </>
-      )}
+        <div className={`bg-white rounded-lg ${boxCss}}`}>
+          {notText && (
+            <>
+              <div className="text-lg mb-3">
+                <p>Googleでログインしてください</p>
+              </div>
+              {!user && notText && (
+                <>
+                  <LoginRecommendationText />
+                  <AuthWithNoSSR />
+                </>
+              )}
+            </>
+          )}
 
-      {user && notText && (
-        <>
-          ログイン済みです。
-          <button className="text-blue-500 border-blue-500 border-2 p-1 rounded text-sm" onClick={() => firebase.auth().signOut()}>Log Out</button>
-          <div className="mt-6">
-            <div className="text-xl mb-2">
-              <p>3. 以下から空き枠をご予約ください</p>
+          {user && notText && (
+            <>
+              {user.displayName}さんがログイン済みです。
+              <div className={"mt-2"}>
+                <button
+                  className="text-white border-teal-500 bg-teal-500 border-2 p-1 rounded text-sm"
+                  onClick={() => firebase.auth().signOut()}
+                >
+                  Log Out
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {user && notText && (
+          <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+            <div className="text-lg mb-3">
+              <p>以下から空き枠をご予約ください</p>
             </div>
             <Calendly setCalendlyState={setCalendlyState} />
           </div>
-        </>
-      )}
+        )}
 
-      {user && notText && calendlyState === CalendlyState.datetimeSelected && (
-        <>
-          <div className="mt-6">
-            <div className="text-xl mb-2">
-              <p>4. メールをご確認ください</p>
+        {user && notText && calendlyState === CalendlyState.datetimeSelected && (
+          <>
+            <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+              <div className="text-lg mb-3">
+                <p>メールをご確認ください</p>
+              </div>
+              <ul className={`list-disc pl-5`}>
+                <li>Calendly.comからの予約完了メールをご確認ください。</li>
+                <li>
+                  届いてない場合、
+                  <a href="https://twitter.com/ryo_mura_brains" target="_blank">
+                    Twitter
+                  </a>{" "}
+                  or{" "}
+                  <a
+                    href="https://www.facebook.com/ryo.murakami.3998"
+                    target="_blank"
+                  >
+                    Facebook
+                  </a>
+                  でお問い合わせください。
+                </li>
+              </ul>
             </div>
-            <p>
-              Calendly.comからの予約完了メールをご確認ください。
-            </p>
-            <p>
-              届いてない場合、
-              <a href="https://twitter.com/ryo_mura_brains" target="_blank">
-                Twitter
-              </a>{" "}
-              or{" "}
-              <a
-                href="https://www.facebook.com/ryo.murakami.3998"
-                target="_blank"
-              >
-                Facebook
-              </a>
-              でお問い合わせください。
-            </p>
-          </div>
-          <div className="mt-6">
-            <div className="text-xl mb-2">
-              <p>5. 事前質問にお応えください</p>
+            <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+              <div className="text-lg mb-3">
+                <p>事前質問にお応えください</p>
+              </div>
+              <p>
+                より円滑な対話をするため、
+                <br />
+                <Link href="/my-page">
+                  <a>こちらから事前質問</a>
+                </Link>
+                にお答えください。
+              </p>
             </div>
-            <p>
-              より円滑な対話をするため、<br/>
-              <Link href="/my-page">
-                <a>こちらから事前質問</a>
-              </Link>
-              にお答えください。
-            </p>
-          </div>
-        </>
-      )}
-    </main>
+          </>
+        )}
+      </main>
+    </div>
   );
 }

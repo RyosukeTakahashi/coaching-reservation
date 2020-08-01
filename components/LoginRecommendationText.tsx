@@ -2,10 +2,9 @@ import React from "react";
 
 export function LoginRecommendationText() {
   return (
-    <div>
-      ・予約時の手入力が減り、
-      <br />
-      ・予約後、Googleカレンダーに予定が自動記入されます。
-    </div>
+    <ul className="text-sm list-disc pl-5">
+      <li>予約時の手入力が減り、</li>
+      <li>Googleカレンダーに予約が自動記入されます。</li>
+    </ul>
   );
 }
