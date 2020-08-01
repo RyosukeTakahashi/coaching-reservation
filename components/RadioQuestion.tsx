@@ -13,16 +13,16 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
   options;
 }) => {
   return (
-    <div className="question">
-      <div className="title">
+    <>
+      <div className="text-xl mb-2">
         <p>{props.title}</p>
       </div>
-      <div className="options">
+      <div className="options ml-4">
         {props.options.map((option, index) => (
           <RadioOption {...option} key={index} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
@@ -31,7 +31,6 @@ const RadioOption: FC<radioOption> = (props: { value; label; radioName }) => {
     radioAnswerWithName(props.radioName)
   );
   const [user] = useUser();
-  console.log(radioState);
   return (
     <div className="radio_option">
       <label>

@@ -1,12 +1,17 @@
-declare module "remark-html" {
-  const html: any;
-  export default html;
-}
+type User = {
+  uid: string;
+  displayName: string;
+  email: string;
+  photoURL: string;
+};
 
-interface User {
-  name: string;
+type Reservation = {
+  id: string;
+  otherOBTalk: string;
+  otherTalkTheme: string;
+  talkThemeState: string[];
+  howFoundMurakami: string;
 }
-
 interface CoachName {
   coachName: string;
 }
@@ -22,3 +27,8 @@ type checkBoxOption = {
   label: string;
   radioName: string;
 };
+
+declare module "remark-html" {
+  const html: any;
+  export default html;
+}

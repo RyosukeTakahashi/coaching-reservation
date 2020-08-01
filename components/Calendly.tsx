@@ -14,7 +14,7 @@ export const Calendly = React.memo((props: { setCalendlyState }) => {
     props.setCalendlyState(CalendlyState.datetimeSelected);
     document
       .getElementsByClassName("calendly-inline-widget")[0]
-      .setAttribute("style", "height: 650px;");
+      .setAttribute("style", "height: 700px;");
   }, [props.setCalendlyState]);
   return (
     <CalendlyEventListener

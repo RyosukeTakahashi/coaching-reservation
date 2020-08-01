@@ -39,7 +39,7 @@ export const calendlySettingAtom = atom({
       },
     },
     styles: {
-      height: "950px",
+      height: "700px",
     },
     text: "予約はこちらから",
   },
@@ -60,20 +60,6 @@ export const userLoadingAtom = atom({
   default: false,
 });
 
-//global.d.tsに後に以降
-type User = {
-  uid: string;
-  displayName: string;
-  email: string;
-  photoURL: string;
-};
-
-type reservation = {
-  datetime: Number;
-  talkTheme: string[];
-  coachName: string[];
-};
-
 export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
   const [user, setUser] = useRecoilState(userAtom);
   const [loadingUser, setLoadingUser] = useRecoilState(userLoadingAtom);
@@ -91,13 +77,11 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
           const userDoc = await userDocRef.get();
           //add user to firestore if no document.
           if (userDoc.data() === undefined) {
-            console.log("no user found");
             await db
               .collection("users")
               .doc(uid)
               .set({ displayNameInApp: displayName, photoURL });
           }
-
           setUser({ uid, displayName, email, photoURL });
         } else setUser(null);
       } catch (error) {

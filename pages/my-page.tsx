@@ -15,14 +15,12 @@ import {
   radioAnswerWithName,
   useUser,
 } from "../src/atoms";
-import { useRecoilState, useRecoilValue } from "recoil/dist";
+import { useRecoilState } from "recoil/dist";
 import { setReservation, setUserProfile } from "../src/fetchers";
+import Link from "next/link";
 
 //todo: atom.tsでUserとったときにもうリアルタイムする？
 //todo: async とrecoilを組み合わせる？
-//todo: dataがある前提になってしまっているので、ない場合で動作するようにする
-//todo: typescriptっぽくなるようリファクタ
-
 export default function MyPage({}: {}) {
   const [user] = useUser();
 
@@ -30,8 +28,10 @@ export default function MyPage({}: {}) {
   const [talkThemeState, setTalkThemeState] = useRecoilState(
     checkboxAnswerWithName(talkThemeStr)
   );
-  const [reservations, setReservations] = useState([{ id: 1 }]);
-  const [otherTalkTheme, setOtherTalkTheme] = useState("default talk theme");
+  const [reservations, setReservations] = useState([{}] as Reservation[]);
+  const [otherTalkTheme, setOtherTalkTheme] = useRecoilState(
+    otherTalkThemeAtom
+  );
   const [howFoundMurakami, setHowFoundMurakami] = useState(
     "how found murakami"
   );
@@ -60,7 +60,8 @@ export default function MyPage({}: {}) {
       .collection(`users/${user.uid}/reservations`)
       .onSnapshot(async (querySnapshot) => {
         const reservations = await querySnapshot.docs.map((doc) => {
-          return { ...doc.data(), id: doc.id };
+          const data = doc.data() as Reservation;
+          return { ...data, id: doc.id };
         });
         const latestReservation = reservations[0];
         setReservations(reservations);
@@ -72,7 +73,7 @@ export default function MyPage({}: {}) {
     return () => {
       unsubscribe();
     };
-  }, [user]);
+  }, [user]); //mount後と、userが読み込まれた(or変更された)後、再実行される
 
   //listener for user document
   useEffect(() => {
@@ -91,9 +92,15 @@ export default function MyPage({}: {}) {
   if (!user) return <div>loading user</div>;
   return (
     <>
+      <div className="p-4 shadow rounded bg-white">
+        <h1 className="text-purple-500 leading-normal">Next.js</h1>
+        <p className="text-gray-500">with Tailwind CSS</p>
+      </div>
+      <p><Link href="/flows/coaching_preparation"><a>予約の取り直しはこちらから</a></Link></p>
       <div className={"reservation"}>
         <h2>直近の予約</h2>
-        {/*<div>予約日：{datetimeStr}</div>*/}
+        <h3>日時</h3>
+        <p>大変お手数ですが、<br/>日時は、Calendly.comから届いたメールをご確認ください。</p>
         <h3>事前質問</h3>
         <div className="title">
           <p>Q1. 今まで、他のOB/OGとはどのようなことを話されましたか？</p>
@@ -112,13 +119,9 @@ export default function MyPage({}: {}) {
         </div>
         <CheckboxQuestion {...radioSettings[talkThemeStr]} />
         <div>その他</div>
-        <textarea
-          name="otherQuestion"
-          value={otherTalkTheme}
-          onChange={(e) => setOtherTalkTheme(e.target.value)}
-          onBlur={() =>
-            setReservation(user.uid, reservations[0].id, preparationAnswer)
-          }
+        <OtherTalkTheme
+          resId={reservations[0].id}
+          preparationAnswer={preparationAnswer}
         />
 
         <div className="title">
@@ -150,15 +153,14 @@ export default function MyPage({}: {}) {
           href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88"
           target={"_blank"}
         >
-          診断はこちら
-        </a>
+          性格診断をこちらからお受けください。
+        </a>受け、
         <RadioQuestion {...radioSettings[mbtiStr]} />
         <RadioQuestion {...radioSettings[aOrTStr]} />
         <h3>High5 Test</h3>
         <a href="https://high5test.com/test/" target={"_blank"}>
-          診断はこちら
-        </a>
-
+          診断をこちらから
+        </a>受け、
         <div className="title">結果のリンクをお貼りください。</div>
         <input
           name="high5"
