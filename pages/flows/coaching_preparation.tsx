@@ -51,7 +51,7 @@ export default function CoachingPreparation({}: {
 
   const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
-    <div className="py-3 bg-teal-200 min-h-screen">
+    <div className="py-3 bg-teal-200 min-h-screen text-gray-800">
       <main className={"form px-3 container mx-md"}>
         <div className="mt-4 px-3 py-4 bg-white rounded-lg">
           <p>
