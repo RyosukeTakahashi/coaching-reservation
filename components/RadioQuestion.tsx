@@ -14,9 +14,9 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
 }) => {
   return (
     <>
-      <div className="text-xl mb-2">
-        <p>{props.title}</p>
-      </div>
+      {/*<div className="text-xl mb-2">*/}
+      {/*  <p>{props.title}</p>*/}
+      {/*</div>*/}
       <div className="options ml-4">
         {props.options.map((option, index) => (
           <RadioOption {...option} key={index} />

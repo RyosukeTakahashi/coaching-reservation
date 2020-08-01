@@ -50,12 +50,16 @@ export default function CoachingPreparation({}: {
       </p>
 
       <div className="mt-6">
+        <div className="text-xl mb-2">
+          <p>1. ご希望の方法をお選びください</p>
+        </div>
+
         <RadioQuestion {...radioSettings[meetOrVideo]} />
       </div>
       {notText && (
         <div className="mt-6">
           <div className="text-xl mb-2">
-            <p>Step2. Googleでログインしてください</p>
+            <p>2. Googleでログインしてください</p>
           </div>
         </div>
       )}
@@ -73,7 +77,7 @@ export default function CoachingPreparation({}: {
           <button className="text-blue-500 border-blue-500 border-2 p-1 rounded text-sm" onClick={() => firebase.auth().signOut()}>Log Out</button>
           <div className="mt-6">
             <div className="text-xl mb-2">
-              <p>Step3. 以下から空き枠をご予約ください。</p>
+              <p>3. 以下から空き枠をご予約ください</p>
             </div>
             <Calendly setCalendlyState={setCalendlyState} />
           </div>
@@ -84,10 +88,10 @@ export default function CoachingPreparation({}: {
         <>
           <div className="mt-6">
             <div className="text-xl mb-2">
-              <p>Step4. 予約確認メールをご確認ください</p>
+              <p>4. メールをご確認ください</p>
             </div>
             <p>
-              Calendly.comからの予約確認メールをご確認ください。
+              Calendly.comからの予約完了メールをご確認ください。
             </p>
             <p>
               届いてない場合、
@@ -106,9 +110,10 @@ export default function CoachingPreparation({}: {
           </div>
           <div className="mt-6">
             <div className="text-xl mb-2">
-              <p>Step5. 事前質問にお応えください</p>
+              <p>5. 事前質問にお応えください</p>
             </div>
             <p>
+              より円滑な対話をするため、<br/>
               <Link href="/my-page">
                 <a>こちらから事前質問</a>
               </Link>
