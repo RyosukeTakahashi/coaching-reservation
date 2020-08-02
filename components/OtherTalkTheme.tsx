@@ -17,6 +17,7 @@ export function OtherTalkTheme(props: { resId; preparationAnswer }) {
       onBlur={() =>
         setReservation(user.uid, props.resId, props.preparationAnswer)
       }
+      className={"p-2 border-2 border-teal-300 rounded-lg"}
     />
   );
 }

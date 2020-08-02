@@ -13,16 +13,12 @@ import { Calendly, CalendlyState } from "../../components/Calendly";
 import { meetOrVideo, radioSettings } from "../../src/settings/inputOption";
 import Link from "next/link";
 import { TealButton } from "../../components/ColorButton";
+import { FormSection } from "../../components/FormSection";
+import { FormSectionTitle } from "../../components/FormSectionTitle";
 
 const AuthWithNoSSR = dynamic(() => import("../../components/auth"), {
   ssr: false,
 });
-
-function FormSection(props) {
-  return <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-    {props.children}
-  </div>;
-}
 
 export default function CoachingPreparation({}: {
   staticCollection: { name: string }[];
@@ -49,50 +45,33 @@ export default function CoachingPreparation({}: {
     }
   }, [meetOrVideoState, user]);
 
-  const [boxCss, setBoxCss] = useState("");
-
-  useEffect(() => {
-    if (notText) setBoxCss("mt-4 px-3 py-4 ");
-    if (!notText) setBoxCss("");
-  });
-
-  // todo: boxをコンポーネントに
-
   const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
     <div className="py-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
-      <main className={"px-3 sm:w-full max-w-screen-sm "}>
+      <main className={"px-3 w-full max-w-screen-sm"}>
         <FormSection>
           <p>
             相談/コーチング依頼の方は、
-            <br/>
+            <br />
             以下の手順でご予約願います。
           </p>
         </FormSection>
 
         <FormSection>
-          <div className="text-lg mb-3">
-            <p>ご希望の方法をお選びください</p>
-          </div>
+          <FormSectionTitle title={"ご希望の方法をお選びください"} />
           <RadioQuestion {...radioSettings[meetOrVideo]} />
         </FormSection>
 
-        <div className={`bg-white rounded-lg ${boxCss}}`}>
-          {notText && (
+        {notText && (
+          <FormSection>
+            <FormSectionTitle title={"Googleでログインしてください"} />
+            {!user && notText && (
               <>
-                <div className="text-lg mb-3">
-                  <p>Googleでログインしてください</p>
-                </div>
-                {!user && notText && (
-                    <>
-                      <LoginRecommendationText/>
-                      <AuthWithNoSSR/>
-                    </>
-                )}
+                <LoginRecommendationText />
+                <AuthWithNoSSR />
               </>
-          )}
-
-          {user && notText && (
+            )}
+            {user && notText && (
               <>
                 {user.displayName}さんがログイン済みです。
                 <div className={"mt-2"}>
@@ -101,58 +80,54 @@ export default function CoachingPreparation({}: {
                   </TealButton>
                 </div>
               </>
-          )}
-        </div>
+            )}
+          </FormSection>
+        )}
 
         {user && notText && (
-            <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-              <div className="text-lg mb-3">
-                <p>以下から空き枠をご予約ください</p>
-              </div>
-              <Calendly setCalendlyState={setCalendlyState}/>
-            </div>
+          <FormSection>
+            <FormSectionTitle title={"以下から空き枠をご予約ください"} />
+            <Calendly setCalendlyState={setCalendlyState} />
+          </FormSection>
         )}
 
         {user && notText && calendlyState === CalendlyState.datetimeSelected && (
-            <>
-              <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-                <div className="text-lg mb-3">
-                  <p>メールをご確認ください</p>
-                </div>
-                <ul className={`list-disc pl-5`}>
-                  <li>Calendly.comからの予約完了メールをご確認ください。</li>
-                  <li>
-                    届いてない場合、
-                    <a href="https://twitter.com/ryo_mura_brains" target="_blank">
-                      Twitter
-                    </a>{" "}
-                    or{" "}
-                    <a
-                        href="https://www.facebook.com/ryo.murakami.3998"
-                        target="_blank"
-                    >
-                      Facebook
-                    </a>
-                    でお問い合わせください。
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-                <div className="text-lg mb-3">
-                  <p>事前質問にお答えください</p>
-                </div>
-                <p>
-                  {user.displayName}さんとの対話がより有意義となるよう、以下から事前質問にお答えください。
-                </p>
-              </div>
-              <div className={"mt-4"}>
-                <Link href="/my-page">
-                  <a>
-                    <TealButton>事前質問に答える</TealButton>
+          <>
+            <FormSection>
+              <FormSectionTitle title={"メールをご確認ください"} />
+              <ul className={`list-disc pl-5`}>
+                <li>Calendly.comからの予約完了メールをご確認ください。</li>
+                <li>
+                  届いてない場合、
+                  <a href="https://twitter.com/ryo_mura_brains" target="_blank">
+                    Twitter
                   </a>
-                </Link>
-              </div>
-            </>
+                  or
+                  <a
+                    href="https://www.facebook.com/ryo.murakami.3998"
+                    target="_blank"
+                  >
+                    Facebook
+                  </a>
+                  でお問い合わせください。
+                </li>
+              </ul>
+            </FormSection>
+            <FormSection>
+              <FormSectionTitle title={"事前質問にお答えください"} />
+              <p>
+                {user.displayName}
+                さんとの対話がより有意義となるよう、以下から事前質問にお答えください。
+              </p>
+            </FormSection>
+            <div className={"mt-4"}>
+              <Link href="/my-page">
+                <a>
+                  <TealButton>事前質問に答える</TealButton>
+                </a>
+              </Link>
+            </div>
+          </>
         )}
       </main>
     </div>

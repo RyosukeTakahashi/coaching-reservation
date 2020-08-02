@@ -44,11 +44,12 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
             });
         }}
       >
-        {props.options.map((option) => (
+        {props.options.map((option, index) => (
           <FormControlLabel
             value={option.label}
             label={option.label}
             control={<TealRadio />}
+            key={index}
           />
         ))}
       </RadioGroup>
