@@ -24,10 +24,6 @@ export default function ClientSide(props: {
   return (
     <>
       <h2>client side rendering</h2>
-      {user && (
-        {/*<div>showing user.reservation: {user.reservations[0].coachName}</div>*/}
-      )}
-      <div>showing and listening to firestore change: {data.name}</div>
       <div>onBlur set firestore doc. Resulting in change of above.</div>
       <input
         type="text"
