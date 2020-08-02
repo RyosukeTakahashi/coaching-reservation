@@ -40,7 +40,7 @@ export default function CoachingPreparation({}: {
         },
       });
     }
-  }, [meetOrVideoState]);
+  }, [meetOrVideoState, user]);
 
   const [boxCss, setBoxCss] = useState("");
 
@@ -49,10 +49,12 @@ export default function CoachingPreparation({}: {
     if (!notText) setBoxCss("")
   });
 
+  // todo: 事前質問遷移をボタンに
+
   const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
-    <div className="py-3 bg-teal-200 min-h-screen text-gray-800">
-      <main className={"form px-3 container mx-md"}>
+    <div className="py-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
+      <main className={"px-3 sm:w-full max-w-screen-sm "}>
         <div className="mt-4 px-3 py-4 bg-white rounded-lg">
           <p>
             相談/コーチング依頼の方は、
@@ -137,7 +139,7 @@ export default function CoachingPreparation({}: {
                 <p>事前質問にお応えください</p>
               </div>
               <p>
-                より円滑な対話をするため、
+                より{user.displayName}様を理解し、当日が有意義な対話となるよう
                 <br />
                 <Link href="/my-page">
                   <a>こちらから事前質問</a>
