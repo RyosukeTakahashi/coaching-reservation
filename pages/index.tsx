@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { GetStaticProps } from "next";
 import { getSortedPostsData } from "../lib/posts";
 import Layout, { siteTitle } from "../components/layout";
-import ClientSide from "../components/clientSide";
 import utilStyles from "../styles/utils.module.css";
 import firebase from "../firebase/clientApp";
 import { LocalStateExample } from "../components/localStateExample";
@@ -51,7 +50,6 @@ export default function Home({
         onClick={() => toggleText()}
         buttonText={buttonText}
       />
-      <ClientSide setName={setName} />
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <BlogList allPosts={allPostsData} />
       </section>
