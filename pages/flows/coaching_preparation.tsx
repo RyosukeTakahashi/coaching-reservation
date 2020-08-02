@@ -12,10 +12,17 @@ import { RadioQuestion } from "../../components/RadioQuestion";
 import { Calendly, CalendlyState } from "../../components/Calendly";
 import { meetOrVideo, radioSettings } from "../../src/settings/inputOption";
 import Link from "next/link";
+import { TealButton } from "../../components/ColorButton";
 
 const AuthWithNoSSR = dynamic(() => import("../../components/auth"), {
   ssr: false,
 });
+
+function FormSection(props) {
+  return <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+    {props.children}
+  </div>;
+}
 
 export default function CoachingPreparation({}: {
   staticCollection: { name: string }[];
@@ -46,108 +53,106 @@ export default function CoachingPreparation({}: {
 
   useEffect(() => {
     if (notText) setBoxCss("mt-4 px-3 py-4 ");
-    if (!notText) setBoxCss("")
+    if (!notText) setBoxCss("");
   });
 
-  // todo: 事前質問遷移をボタンに
+  // todo: boxをコンポーネントに
 
   const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
     <div className="py-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
       <main className={"px-3 sm:w-full max-w-screen-sm "}>
-        <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+        <FormSection>
           <p>
             相談/コーチング依頼の方は、
-            <br />
+            <br/>
             以下の手順でご予約願います。
           </p>
-        </div>
+        </FormSection>
 
-        <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+        <FormSection>
           <div className="text-lg mb-3">
             <p>ご希望の方法をお選びください</p>
           </div>
-
           <RadioQuestion {...radioSettings[meetOrVideo]} />
-        </div>
+        </FormSection>
 
         <div className={`bg-white rounded-lg ${boxCss}}`}>
           {notText && (
-            <>
-              <div className="text-lg mb-3">
-                <p>Googleでログインしてください</p>
-              </div>
-              {!user && notText && (
-                <>
-                  <LoginRecommendationText />
-                  <AuthWithNoSSR />
-                </>
-              )}
-            </>
+              <>
+                <div className="text-lg mb-3">
+                  <p>Googleでログインしてください</p>
+                </div>
+                {!user && notText && (
+                    <>
+                      <LoginRecommendationText/>
+                      <AuthWithNoSSR/>
+                    </>
+                )}
+              </>
           )}
 
           {user && notText && (
-            <>
-              {user.displayName}さんがログイン済みです。
-              <div className={"mt-2"}>
-                <button
-                  className="text-white border-teal-500 bg-teal-500 border-2 p-1 rounded text-sm"
-                  onClick={() => firebase.auth().signOut()}
-                >
-                  Log Out
-                </button>
-              </div>
-            </>
+              <>
+                {user.displayName}さんがログイン済みです。
+                <div className={"mt-2"}>
+                  <TealButton onClickHandler={() => firebase.auth().signOut()}>
+                    Log Out
+                  </TealButton>
+                </div>
+              </>
           )}
         </div>
 
         {user && notText && (
-          <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-            <div className="text-lg mb-3">
-              <p>以下から空き枠をご予約ください</p>
+            <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+              <div className="text-lg mb-3">
+                <p>以下から空き枠をご予約ください</p>
+              </div>
+              <Calendly setCalendlyState={setCalendlyState}/>
             </div>
-            <Calendly setCalendlyState={setCalendlyState} />
-          </div>
         )}
 
         {user && notText && calendlyState === CalendlyState.datetimeSelected && (
-          <>
-            <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-              <div className="text-lg mb-3">
-                <p>メールをご確認ください</p>
+            <>
+              <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+                <div className="text-lg mb-3">
+                  <p>メールをご確認ください</p>
+                </div>
+                <ul className={`list-disc pl-5`}>
+                  <li>Calendly.comからの予約完了メールをご確認ください。</li>
+                  <li>
+                    届いてない場合、
+                    <a href="https://twitter.com/ryo_mura_brains" target="_blank">
+                      Twitter
+                    </a>{" "}
+                    or{" "}
+                    <a
+                        href="https://www.facebook.com/ryo.murakami.3998"
+                        target="_blank"
+                    >
+                      Facebook
+                    </a>
+                    でお問い合わせください。
+                  </li>
+                </ul>
               </div>
-              <ul className={`list-disc pl-5`}>
-                <li>Calendly.comからの予約完了メールをご確認ください。</li>
-                <li>
-                  届いてない場合、
-                  <a href="https://twitter.com/ryo_mura_brains" target="_blank">
-                    Twitter
-                  </a>{" "}
-                  or{" "}
-                  <a
-                    href="https://www.facebook.com/ryo.murakami.3998"
-                    target="_blank"
-                  >
-                    Facebook
-                  </a>
-                  でお問い合わせください。
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-              <div className="text-lg mb-3">
-                <p>事前質問にお応えください</p>
+              <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+                <div className="text-lg mb-3">
+                  <p>事前質問にお答えください</p>
+                </div>
+                <p>
+                  {user.displayName}さんとの対話がより有意義となるよう、以下から事前質問にお答えください。
+                </p>
               </div>
-              <p>
-                より{user.displayName}様を理解し、当日が有意義な対話となるよう
-                <br />
+              <div className={"mt-4"}>
                 <Link href="/my-page">
-                  <a>こちらから事前質問</a>
+                  <a>
+                    <TealButton>事前質問に答える</TealButton>
+                  </a>
                 </Link>
-                にお答えください。
-              </p>
-            </div>
-          </>
+              </div>
+            </>
         )}
       </main>
     </div>
