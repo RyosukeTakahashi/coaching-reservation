@@ -15,11 +15,11 @@ export const Calendly = React.memo((props: { setCalendlyState }) => {
     document
       .getElementsByClassName("calendly-inline-widget")[0]
       .setAttribute("style", "height: 700px;");
+    window.scrollTo(0,document.body.scrollHeight)
   }, [props.setCalendlyState]);
   return (
     <CalendlyEventListener
       onEventScheduled={onScheduled}
-      onDateAndTimeSelected={onScheduled}
     >
       <InlineWidget {...calendlySetting} />
     </CalendlyEventListener>
