@@ -18,7 +18,6 @@ export const getReservations = async (uid) => {
 };
 
 export const setUserProfile = async (uid, profile) => {
-  console.log(profile);
   const db = firebase.firestore();
   await db.doc(`users/${uid}`).set(profile, { merge: true });
 };

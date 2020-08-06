@@ -62,6 +62,22 @@ export default function CoachingPreparation({}: {
           <RadioQuestion {...radioSettings[meetOrVideo]} />
         </FormSection>
 
+        {notText == false && meetOrVideoState != "" && (
+          <FormSection>
+            <FormSectionTitle title={"SNSでご連絡ください"} />
+            <a href="https://twitter.com/ryo_mura_brains" target="_blank">
+              Twitter
+            </a>
+            {" / "}
+            <a
+              href="https://www.facebook.com/ryo.murakami.3998"
+              target="_blank"
+            >
+              Facebook
+            </a>
+          </FormSection>
+        )}
+
         {notText && (
           <FormSection>
             <FormSectionTitle title={"Googleでログインしてください"} />
@@ -95,7 +111,9 @@ export default function CoachingPreparation({}: {
           <>
             <FormSection>
               <FormSectionTitle title={"事前質問にお答えください"} />
-              <p>予約は完了しました。<br/>
+              <p>
+                予約は完了しました。
+                <br />
                 {user.displayName}
                 さんとの対話がより有意義となるよう、以下から事前質問にお答え願います。
               </p>

@@ -20,9 +20,11 @@ import Link from "next/link";
 import { TealButton } from "../components/ColorButton";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { ThemeProvider } from "@material-ui/styles";
+import { Snackbar } from "@material-ui/core";
 
+//todo: loginボタン
+//render 減らす
 //todo: atom.tsでUserとったときにもうリアルタイムする？
-//todo: async とrecoilを組み合わせる？
 
 const monospaceTheme = createMuiTheme({
   typography: {
@@ -53,17 +55,17 @@ export default function MyPage({}: {}) {
 
   const [mbti, setMbti] = useRecoilState(radioAnswerWithName(mbtiStr));
   const [aOrT, setAOrT] = useRecoilState(radioAnswerWithName(aOrTStr));
-  const [high5, setHigh5] = useState("");
+  const [seikakuNavi, setseikakuNavi] = useState("");
   const assessment = {
     mbti,
     aOrT,
-    high5,
+    seikakuNavi,
   };
+  const [snackbarState, setSnackbarState] = useState(false);
 
   //listener for reservation collection。後で異動。
   useEffect(() => {
     const db = firebase.firestore();
-    console.log(user);
     if (user.uid === "") return;
     const unsubscribe = db
       .collection(`users/${user.uid}/reservations`)
@@ -91,7 +93,7 @@ export default function MyPage({}: {}) {
     const unsubscribe = db.doc(`users/${user.uid}`).onSnapshot(async (doc) => {
       setAOrT(doc.data().aOrT);
       setMbti(doc.data().mbti);
-      setHigh5(doc.data().high5);
+      setseikakuNavi(doc.data().seikakuNavi);
     });
     return () => {
       unsubscribe();
@@ -111,7 +113,7 @@ export default function MyPage({}: {}) {
                 予約日時は、Calendly.comからの予約確認メールをご覧ください。
               </li>
               <li>
-                届いてない場合、
+                メールが届いてない場合、
                 <a href="https://twitter.com/ryo_mura_brains" target="_blank">
                   Twitter
                 </a>
@@ -157,13 +159,14 @@ export default function MyPage({}: {}) {
             />
             <div className={"mt-5"}>
               <TealButton
-                onClickHandler={() =>
-                  setReservation(
+                onClickHandler={async () => {
+                  await setReservation(
                     user.uid,
                     reservations[0].id,
                     preparationAnswer
-                  )
-                }
+                  );
+                  setSnackbarState(true);
+                }}
               >
                 事前回答を保存
               </TealButton>
@@ -205,20 +208,33 @@ export default function MyPage({}: {}) {
             から受け、結果のURLをお貼りください。
             <div>
               <input
-                name="high5"
-                value={high5}
-                onChange={(e) => setHigh5(e.target.value)}
+                name="seikakuNavi"
+                value={seikakuNavi}
+                onChange={(e) => setseikakuNavi(e.target.value)}
                 className={"p-2 border-2 border-teal-300 rounded-lg"}
               />
             </div>
             <div className={"mt-5"}>
               <TealButton
-                onClickHandler={() => setUserProfile(user.uid, assessment)}
+                onClickHandler={async () => {
+                  await setUserProfile(user.uid, assessment);
+                  setSnackbarState(true);
+                }}
               >
-                保存
+                診断結果を保存
               </TealButton>
             </div>
           </div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            open={snackbarState}
+            autoHideDuration={2500}
+            onClose={() => setSnackbarState(false)}
+            message="保存しました"
+          />
         </main>
       </div>
     </>
