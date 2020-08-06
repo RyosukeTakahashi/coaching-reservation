@@ -7,7 +7,6 @@ import {
   radioSettings,
   talkTheme as talkThemeStr,
 } from "../src/settings/inputOption";
-import { OtherTalkTheme } from "../components/OtherTalkTheme";
 import { RadioQuestion } from "../components/RadioQuestion";
 import {
   checkboxAnswerWithName,
@@ -19,9 +18,19 @@ import { useRecoilState } from "recoil/dist";
 import { setReservation, setUserProfile } from "../src/fetchers";
 import Link from "next/link";
 import { TealButton } from "../components/ColorButton";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { ThemeProvider } from "@material-ui/styles";
 
 //todo: atom.tsでUserとったときにもうリアルタイムする？
 //todo: async とrecoilを組み合わせる？
+//
+
+const monospaceTheme = createMuiTheme({
+  typography: {
+    fontFamily: 'Monaco, "monospace"',
+  },
+});
+
 export default function MyPage({}: {}) {
   const [user] = useUser();
 
@@ -98,7 +107,7 @@ export default function MyPage({}: {}) {
           <div className="mt-4 px-3 py-4 bg-white rounded-lg">
             <h1 className={"text-2xl"}>直近の予約について</h1>
             <h2 className={"text-xl mt-4"}>日時</h2>
-            <ul className={`list-disc pl-5`}>
+            <ul className={`list-disc pl-5 leading-8`}>
               <li>
                 予約日時は、Calendly.comからの予約確認メールをご覧ください。
               </li>
@@ -107,7 +116,7 @@ export default function MyPage({}: {}) {
                 <a href="https://twitter.com/ryo_mura_brains" target="_blank">
                   Twitter
                 </a>
-                or
+                {" / "}
                 <a
                   href="https://www.facebook.com/ryo.murakami.3998"
                   target="_blank"
@@ -168,29 +177,42 @@ export default function MyPage({}: {}) {
           </div>
 
           <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-            <h2>性格診断</h2>
-            <h3>16タイプ診断</h3>
-            <a
-              href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88"
-              target={"_blank"}
-            >
-              性格診断をこちらからお受けください。
+            <h1 className={"text-2xl"}>性格診断</h1>
+            <h2 className={"text-xl mt-4"}>16タイプ診断</h2>
+            <p>
+              <a
+                href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88"
+                target={"_blank"}
+              >
+                16タイプ診断をこちらからお受けください。
+              </a>
+            </p>
+            <h3 className={"text-lg mt-5 mb-3"}>
+              結果の4文字をお選びください。
+            </h3>
+            <ThemeProvider theme={monospaceTheme}>
+              <RadioQuestion {...radioSettings[mbtiStr]} />
+            </ThemeProvider>
+            <h3 className={"text-lg mt-5 mb-3"}>
+              結果の5文字目をお選びください。
+            </h3>
+            <div className={"monospace-font"}>
+              <RadioQuestion {...radioSettings[aOrTStr]} />
+            </div>
+            <h2 className={"text-xl mt-4"}>性格ナビ診断</h2>
+            <a href="https://seikakunabi.jp/question/" target={"_blank"}>
+              性格ナビ診断をこちら
             </a>
-            受け、
-            <RadioQuestion {...radioSettings[mbtiStr]} />
-            <RadioQuestion {...radioSettings[aOrTStr]} />
-            <h3>High5 Test</h3>
-            <a href="https://high5test.com/test/" target={"_blank"}>
-              診断をこちらから
-            </a>
-            受け、
-            <div className="title">結果のリンクをお貼りください。</div>
-            <input
-              name="high5"
-              value={high5}
-              onChange={(e) => setHigh5(e.target.value)}
-            />
+            から受け、結果のURLをお貼りください。
             <div>
+              <input
+                name="high5"
+                value={high5}
+                onChange={(e) => setHigh5(e.target.value)}
+                className={"p-2 border-2 border-teal-300 rounded-lg"}
+              />
+            </div>
+            <div className={"mt-5"}>
               <TealButton
                 onClickHandler={() => setUserProfile(user.uid, assessment)}
               >

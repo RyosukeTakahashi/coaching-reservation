@@ -13,7 +13,8 @@ const uiConfig = {
   callbacks: {
     signInSuccessWithAuthResult: () => false, // Avoid redirects after sign-in.
   },
-  credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO, // add localhost:3000 as origin at google api console
+  // add localhost:3000 as origin at https://console.developers.google.com/apis/credentials/oauthclient/
+  credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
 };
 
 export default function Auth() {
