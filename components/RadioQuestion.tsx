@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { radioAnswerWithName, useUser } from "../src/atoms";
-import { useSetRecoilState } from "recoil/dist";
+import {useRecoilState, useSetRecoilState} from "recoil/dist";
 import { setUserProfile } from "../src/fetchers";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -30,7 +30,7 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
   options;
 }) => {
   const [user] = useUser();
-  const setRadioState = useSetRecoilState(
+  const [radioState, setRadioState] = useRecoilState(
     radioAnswerWithName(props.options[0].radioName)
   );
   return (
@@ -38,11 +38,13 @@ export const RadioQuestion: FC<radioQuestionProps> = (props: {
       <RadioGroup
         onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
           setRadioState(e.target.value);
+          //todo: ↓の副作用はpropsとして持ってこないとこのコンポーネントに汎用性がない
           if (user)
             await setUserProfile(user.uid, {
               [props.options[0].radioName]: e.target.value,
             });
         }}
+        value={radioState}
       >
         {props.options.map((option, index) => (
           <FormControlLabel

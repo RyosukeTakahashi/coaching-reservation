@@ -23,7 +23,6 @@ import { ThemeProvider } from "@material-ui/styles";
 
 //todo: atom.tsでUserとったときにもうリアルタイムする？
 //todo: async とrecoilを組み合わせる？
-//
 
 const monospaceTheme = createMuiTheme({
   typography: {
@@ -184,7 +183,7 @@ export default function MyPage({}: {}) {
                 href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88"
                 target={"_blank"}
               >
-                16タイプ診断をこちらからお受けください。
+                16タイプ診断を®こちらからお受けください。
               </a>
             </p>
             <h3 className={"text-lg mt-5 mb-3"}>

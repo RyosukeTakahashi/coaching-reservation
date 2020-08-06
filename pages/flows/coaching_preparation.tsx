@@ -91,33 +91,13 @@ export default function CoachingPreparation({}: {
           </FormSection>
         )}
 
-        {user && notText && calendlyState === CalendlyState.datetimeSelected && (
+        {user && notText && calendlyState === CalendlyState.scheduled && (
           <>
             <FormSection>
-              <FormSectionTitle title={"メールをご確認ください"} />
-              <ul className={`list-disc pl-5`}>
-                <li>Calendly.comからの予約完了メールをご確認ください。</li>
-                <li>
-                  届いてない場合、
-                  <a href="https://twitter.com/ryo_mura_brains" target="_blank">
-                    Twitter
-                  </a>
-                  or
-                  <a
-                    href="https://www.facebook.com/ryo.murakami.3998"
-                    target="_blank"
-                  >
-                    Facebook
-                  </a>
-                  でお問い合わせください。
-                </li>
-              </ul>
-            </FormSection>
-            <FormSection>
               <FormSectionTitle title={"事前質問にお答えください"} />
-              <p>
+              <p>予約は完了しました。<br/>
                 {user.displayName}
-                さんとの対話がより有意義となるよう、以下から事前質問にお答えください。
+                さんとの対話がより有意義となるよう、以下から事前質問にお答え願います。
               </p>
             </FormSection>
             <div className={"mt-4"}>

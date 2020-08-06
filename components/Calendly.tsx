@@ -11,7 +11,7 @@ export enum CalendlyState {
 export const Calendly = React.memo((props: { setCalendlyState }) => {
   const [calendlySetting] = useRecoilState(calendlySettingAtom);
   const onScheduled = React.useCallback(() => {
-    props.setCalendlyState(CalendlyState.datetimeSelected);
+    props.setCalendlyState(CalendlyState.scheduled);
     document
       .getElementsByClassName("calendly-inline-widget")[0]
       .setAttribute("style", "height: 700px;");
