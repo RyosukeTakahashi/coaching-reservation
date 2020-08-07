@@ -4,7 +4,7 @@ import React from "react";
 import * as firebaseui from "firebaseui";
 
 const uiConfig = {
-  signInFlow: "popup",
+  signInFlow: "redirect",
   signInSuccessUrl: "/flows/coaching_preparation",
   signInOptions: [
     {
