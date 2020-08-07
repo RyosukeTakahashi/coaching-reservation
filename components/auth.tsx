@@ -2,8 +2,10 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "../firebase/clientApp";
 import React from "react";
 import * as firebaseui from "firebaseui";
+
 const uiConfig = {
   signInFlow: "popup",
+  signInSuccessUrl: "/flows/coaching_preparation",
   signInOptions: [
     {
       provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -11,7 +13,7 @@ const uiConfig = {
     },
   ],
   callbacks: {
-    signInSuccessWithAuthResult: () => false, // Avoid redirects after sign-in.
+    signInSuccessWithAuthResult: (authResult) => false, // Avoid redirects after sign-in.
   },
   // add localhost:3000 as origin at https://console.developers.google.com/apis/credentials/oauthclient/
   credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,

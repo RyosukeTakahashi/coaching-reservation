@@ -15,6 +15,7 @@ import Link from "next/link";
 import { TealButton } from "../../components/ColorButton";
 import { FormSection } from "../../components/FormSection";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
+import Head from "next/dist/next-server/lib/head";
 
 const AuthWithNoSSR = dynamic(() => import("../../components/auth"), {
   ssr: false,
@@ -48,6 +49,9 @@ export default function CoachingPreparation({}: {
   const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
     <div className="py-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
+      <Head>
+        <title>予約ページ</title>
+      </Head>
       <main className={"px-3 w-full max-w-screen-sm"}>
         <FormSection>
           <p>
@@ -126,6 +130,16 @@ export default function CoachingPreparation({}: {
               </Link>
             </div>
           </>
+        )}
+
+        {["","テキスト"].includes(meetOrVideoState) && (
+          <div className={"mt-4"}>
+            <Link href="/my-page">
+              <a>
+                <TealButton>予約済みの方はこちら</TealButton>
+              </a>
+            </Link>
+          </div>
         )}
       </main>
     </div>

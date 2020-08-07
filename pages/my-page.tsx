@@ -21,10 +21,18 @@ import { TealButton } from "../components/ColorButton";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { ThemeProvider } from "@material-ui/styles";
 import { Snackbar } from "@material-ui/core";
+import Head from "next/head";
+import dynamic from "next/dist/next-server/lib/dynamic";
+import { FormSection } from "../components/FormSection";
+import { FormSectionTitle } from "../components/FormSectionTitle";
+import { LoginRecommendationText } from "../components/LoginRecommendationText";
+const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
+  ssr: false,
+});
 
-//todo: loginボタン
-//render 減らす
-//todo: atom.tsでUserとったときにもうリアルタイムする？
+//todo: リダイレクト先がおかしい・・？__auth OS別に、指示を出す・・・？iphoneで動作確認。
+//todo: リファクタ コンポーネント分割, useEffect 移動, atom.tsでUserとったときにもうリアルタイム？
+//todo: 高速化 render 減らす
 
 const monospaceTheme = createMuiTheme({
   typography: {
@@ -35,7 +43,7 @@ const monospaceTheme = createMuiTheme({
 export default function MyPage({}: {}) {
   const [user] = useUser();
 
-  const [otherOBTalk, setOtherOBTalk] = useState("default state");
+  const [otherOBTalk, setOtherOBTalk] = useState("");
   const [talkThemeState, setTalkThemeState] = useRecoilState(
     checkboxAnswerWithName(talkThemeStr)
   );
@@ -43,9 +51,7 @@ export default function MyPage({}: {}) {
   const [otherTalkTheme, setOtherTalkTheme] = useRecoilState(
     otherTalkThemeAtom
   );
-  const [howFoundMurakami, setHowFoundMurakami] = useState(
-    "how found murakami"
-  );
+  const [howFoundMurakami, setHowFoundMurakami] = useState("");
   const preparationAnswer = {
     otherOBTalk,
     talkThemeState,
@@ -65,8 +71,8 @@ export default function MyPage({}: {}) {
 
   //listener for reservation collection。後で異動。
   useEffect(() => {
+    if (!user || user.uid === "") return;
     const db = firebase.firestore();
-    if (user.uid === "") return;
     const unsubscribe = db
       .collection(`users/${user.uid}/reservations`)
       .onSnapshot(async (querySnapshot) => {
@@ -88,8 +94,8 @@ export default function MyPage({}: {}) {
 
   //listener for user document。後で異動。
   useEffect(() => {
+    if (!user || user.uid === "") return;
     const db = firebase.firestore();
-    if (user.uid === "") return;
     const unsubscribe = db.doc(`users/${user.uid}`).onSnapshot(async (doc) => {
       setAOrT(doc.data().aOrT);
       setMbti(doc.data().mbti);
@@ -100,9 +106,27 @@ export default function MyPage({}: {}) {
     };
   }, [user]);
 
-  if (!user) return <div>loading user</div>;
+  if (!user)
+    return (
+      <div className="px-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
+        <main className={"px-3 w-full max-w-screen-sm"}>
+          <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+            <FormSection>
+              <FormSectionTitle title={"Googleでログインしてください"} />
+              <div>
+                予約情報の確認, 事前質問の回答, 性格診断結果の更新ができます。
+              </div>
+              <AuthWithNoSSR />
+            </FormSection>
+          </div>
+        </main>
+      </div>
+    );
   return (
     <>
+      <Head>
+        <title>{user.displayName}さんの予約ページ</title>
+      </Head>
       <div className="px-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
         <main className={"px-3 w-full max-w-screen-sm"}>
           <div className="mt-4 px-3 py-4 bg-white rounded-lg">
@@ -225,6 +249,12 @@ export default function MyPage({}: {}) {
               </TealButton>
             </div>
           </div>
+          <div className={"mt-5 flex justify-center"}>
+            <TealButton onClickHandler={() => firebase.auth().signOut()}>
+              Log Out
+            </TealButton>
+          </div>
+
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",
