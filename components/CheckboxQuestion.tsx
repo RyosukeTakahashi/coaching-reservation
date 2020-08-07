@@ -67,8 +67,6 @@ const CheckBoxOption: FC<checkBoxOption> = (props: {
       );
     }
   };
-
-  console.log(checkboxState);
   return (
     <div className="radio_option">
       <label>
