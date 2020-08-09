@@ -63,9 +63,31 @@ export default function CoachingPreparation({}: {
         </FormSection>
 
         <FormSection>
-          <FormSectionTitle title={"ご希望の方法をお選びください"} />
-          <RadioQuestion {...radioSettings[meetOrVideo]} />
+          <FormSectionTitle title={"Googleでログインしてください"} />
+          {!user && (
+            <>
+              <LoginRecommendationText />
+              <AuthWithNoSSR />
+            </>
+          )}
+          {user && (
+            <>
+              {user.displayName}さんがログイン済みです。
+              <div className={"mt-2"}>
+                <TealButton onClickHandler={() => firebase.auth().signOut()}>
+                  Log Out
+                </TealButton>
+              </div>
+            </>
+          )}
         </FormSection>
+
+        {user && (
+          <FormSection>
+            <FormSectionTitle title={"ご希望の方法をお選びください"} />
+            <RadioQuestion {...radioSettings[meetOrVideo]} />
+          </FormSection>
+        )}
 
         {notText == false && meetOrVideoState != "" && (
           <FormSection>
@@ -80,28 +102,6 @@ export default function CoachingPreparation({}: {
             >
               Facebook
             </a>
-          </FormSection>
-        )}
-
-        {notText && (
-          <FormSection>
-            <FormSectionTitle title={"Googleでログインしてください"} />
-            {!user && notText && (
-              <>
-                <LoginRecommendationText />
-                <AuthWithNoSSR />
-              </>
-            )}
-            {user && notText && (
-              <>
-                {user.displayName}さんがログイン済みです。
-                <div className={"mt-2"}>
-                  <TealButton onClickHandler={() => firebase.auth().signOut()}>
-                    Log Out
-                  </TealButton>
-                </div>
-              </>
-            )}
           </FormSection>
         )}
 

@@ -29,7 +29,6 @@ const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
   ssr: false,
 });
 
-//todo: ログインredirect後、再度選択が必要なのいまいち
 //todo: リファクタ コンポーネント分割, useEffect 移動, atom.tsでUserとったときにもうリアルタイム？
 //todo: 高速化 render 減らす
 
@@ -132,7 +131,14 @@ export default function MyPage({}: {}) {
             <h2 className={"text-xl mt-4"}>日時</h2>
             <ul className={`list-disc pl-5 leading-8`}>
               <li>
-                予約日時は、Calendly.comからの予約確認メールをご覧ください。
+                予約日時は、Calendly.comからの予約確認メール /{" "}
+                <a
+                  href="https://calendar.google.com/calendar/r"
+                  target="_blank"
+                >
+                  Googleカレンダー
+                </a>
+                をご覧ください。
               </li>
               <li>
                 メールが届いてない場合、
@@ -149,15 +155,32 @@ export default function MyPage({}: {}) {
                 でお問い合わせください。
               </li>
             </ul>
+            <h2 className={"text-xl mt-6"}>場所</h2>
+            <a
+                href="https://calendar.google.com/calendar/r"
+                target="_blank"
+            >
+              Googleカレンダー
+            </a>に追加された予定（以下の画像を参考）から、Google Meetを時刻になったらお開きください。
+            <div className={"flex justify-center"}>
+              <img src="/images/gcal_reservation.png" alt="Google Calendar" className={"mt-4 border-2 rounded-lg"}/>
 
-            <h2 className={"text-xl mt-6"}>事前質問</h2>
+            </div>
+
+            <br/>設定が不安な方は予めGoogle Meetでマイクテストなどをして頂けますと幸いです。
+
+
+            <h2 className={"text-xl mt-12"}>事前質問</h2>
             <h3 className={"text-lg mt-5 mb-3"}>
-              Q1. 今まで、他のOB/OGとはどのようなことを話されましたか？
+              Q1. 他のOB/OGとはどのようなことを話し、学ばれましたか？
             </h3>
+            <p>（なければ、「なし」とご記入ください。）</p>
             <textarea
               name="otherOBTalk"
               value={otherOBTalk}
               onChange={(e) => setOtherOBTalk(e.target.value)}
+              rows={3}
+              cols={40}
               onBlur={() =>
                 setReservation(user.uid, reservations[0].id, preparationAnswer)
               }
@@ -168,7 +191,7 @@ export default function MyPage({}: {}) {
             </h3>
             <CheckboxQuestion {...radioSettings[talkThemeStr]} />
             <h3 className={"text-lg mt-5 mb-3"}>
-              Q3. どう検索して村上を見つけられましたか？
+              Q3. なぜ村上に申請いただけたでしょうか？
             </h3>
             <textarea
               name="howDidFindMurakami"
@@ -178,6 +201,8 @@ export default function MyPage({}: {}) {
                 setReservation(user.uid, reservations[0].id, preparationAnswer)
               }
               className={"p-2 border-2 border-teal-300 rounded-lg"}
+              rows={3}
+              cols={40}
             />
             <div className={"mt-5"}>
               <TealButton
@@ -247,6 +272,61 @@ export default function MyPage({}: {}) {
               </TealButton>
             </div>
           </div>
+
+          <FormSection>
+            <h2 className={"text-2xl"}>読んでいただきたい参考記事</h2>
+            <p>
+              当日は、{user.displayName}
+              さんのお話をより伺うため、村上の自己紹介と会社紹介は基本的に省きます。
+              そのため、以下をお読みいただけると幸いです。
+            </p>
+            <ul className={`list-disc pl-5 leading-8 my-4`}>
+              <li>
+                <a href="https://matcher.jp/obogs/8e8c6318e9eb" target="_blank">
+                  『Matcherプロフィール』
+                </a>
+              </li>
+              <li>
+                <a href="https://bit.ly/31T0BYW" target="_blank">
+                  『自己分析と業界分析の方法』
+                </a>
+              </li>
+              <li>
+                <a href="https://bit.ly/2Om4GRH" target="_blank">
+                  『DeNAの志望動機や社風や、就活当時の軸ついて』
+                </a>
+              </li>
+              <li>
+                <a href="http://bit.ly/3bNFmNP" target="_blank">
+                  『コーチャブルになる方法』
+                </a>
+                （コーチング受けるなら是非）
+              </li>
+            </ul>
+            <p>
+              これらを読んだ上で質問などあれば、お聞きください。
+              <br />
+              就活生の方に割と好評な記事なので、ぜひ。
+            </p>
+          </FormSection>
+
+          <FormSection>
+            <h2 className={"text-2xl"}>Twitterのフォローお願いします(任意)</h2>
+            フォロー頂けるとお話した後、DMでやりとりしやすくなるので、お願いします。
+            <a href="https://twitter.com/ryo_mura_brains" target="_blank">
+              https://twitter.com/ryo_mura_brains
+            </a>
+          </FormSection>
+
+          <FormSection>
+            <h2 className={"text-2xl"}>2回目以降の相談について</h2>
+            <p>2回目以降の相談/コーチングをお望みの場合、 責任を持って対応しますため、そのようなご依頼はコーチングのプロとしてお受けします（1時間 1500円）。</p>
+            <p>支払い方法は、LinePay/PayPay/銀行振り込み/クレジットカードなど対応しております。</p>
+
+            学生の方の1回目の相談は、無償ボランティアで対応しております。
+          </FormSection>
+
+
           <div className={"mt-5 flex justify-center"}>
             <TealButton onClickHandler={() => firebase.auth().signOut()}>
               Log Out
