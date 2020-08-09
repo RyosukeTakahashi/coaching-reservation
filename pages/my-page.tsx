@@ -180,7 +180,7 @@ export default function MyPage({}: {}) {
               value={otherOBTalk}
               onChange={(e) => setOtherOBTalk(e.target.value)}
               rows={3}
-              cols={40}
+              cols={30}
               onBlur={() =>
                 setReservation(user.uid, reservations[0].id, preparationAnswer)
               }
@@ -202,7 +202,7 @@ export default function MyPage({}: {}) {
               }
               className={"p-2 border-2 border-teal-300 rounded-lg"}
               rows={3}
-              cols={40}
+              cols={30}
             />
             <div className={"mt-5"}>
               <TealButton
@@ -233,7 +233,7 @@ export default function MyPage({}: {}) {
                 href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88"
                 target={"_blank"}
               >
-                16タイプ診断を®こちらからお受けください。
+                16タイプ診断をこちらからお受けください。
               </a>
             </p>
             <h3 className={"text-lg mt-5 mb-3"}>

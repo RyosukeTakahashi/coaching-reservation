@@ -26,7 +26,6 @@ export const radioSettings: { [s: string]: radioQuestionProps } = {
     title: "Step1. ご希望の方法をお選びください",
     options: generateOptions(
       [
-        { value: "対面", label: "対面" },
         { value: "ビデオチャット", label: "ビデオチャット" },
         { value: "text", label: "テキスト" },
       ],
