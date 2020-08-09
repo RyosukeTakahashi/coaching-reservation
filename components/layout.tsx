@@ -18,7 +18,6 @@ export default function Layout({
   const [user] = useUser();
 
   const name = user ? user.displayName : defaultName;
-  const profileImgUrl = user ? user.photoURL : "/images/userIcon.png";
   return (
     <div className={styles.container}>
       <Head>
@@ -48,15 +47,15 @@ export default function Layout({
           </>
         ) : (
           <>
-            <Link href="/">
-              {/*<a>*/}
-              {/*  <img*/}
-              {/*    src={profileImgUrl}*/}
-              {/*    className={`${styles.headerImage} ${utilStyles.borderCircle}`}*/}
-              {/*    alt={name}*/}
-              {/*  />*/}
-              {/*</a>*/}
-            </Link>
+            {/*<Link href="/">*/}
+            {/*<a>*/}
+            {/*  <img*/}
+            {/*    src={profileImgUrl}*/}
+            {/*    className={`${styles.headerImage} ${utilStyles.borderCircle}`}*/}
+            {/*    alt={name}*/}
+            {/*  />*/}
+            {/*</a>*/}
+            {/*</Link>*/}
             <h2 className={utilStyles.headingLg}>
               <Link href="/">
                 <a className={utilStyles.colorInherit}>{name}</a>
