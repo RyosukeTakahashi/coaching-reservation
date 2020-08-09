@@ -14,7 +14,7 @@ export const Calendly = React.memo((props: { setCalendlyState }) => {
     props.setCalendlyState(CalendlyState.scheduled);
     document
       .getElementsByClassName("calendly-inline-widget")[0]
-      .setAttribute("style", "height: 700px;");
+      .setAttribute("style", "height: 570px;");
     window.scrollTo(0,document.body.scrollHeight)
   }, [props.setCalendlyState]);
   return (

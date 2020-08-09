@@ -25,12 +25,11 @@ import Head from "next/head";
 import dynamic from "next/dist/next-server/lib/dynamic";
 import { FormSection } from "../components/FormSection";
 import { FormSectionTitle } from "../components/FormSectionTitle";
-import { LoginRecommendationText } from "../components/LoginRecommendationText";
 const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
   ssr: false,
 });
 
-//todo: リダイレクト先がおかしい・・？__auth OS別に、指示を出す・・・？iphoneで動作確認。
+//todo: ログインredirect後、再度選択が必要なのいまいち
 //todo: リファクタ コンポーネント分割, useEffect 移動, atom.tsでUserとったときにもうリアルタイム？
 //todo: 高速化 render 減らす
 
@@ -68,7 +67,6 @@ export default function MyPage({}: {}) {
     seikakuNavi,
   };
   const [snackbarState, setSnackbarState] = useState(false);
-
   //listener for reservation collection。後で異動。
   useEffect(() => {
     if (!user || user.uid === "") return;

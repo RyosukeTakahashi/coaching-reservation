@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   createStyles,
   withStyles,
@@ -26,11 +26,32 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export function TealButton(props) {
+export type buttonProps = {
+  size?: string;
+  onClickHandler?: () => void;
+  fullWidth?: boolean;
+  startIcon?: any;
+};
+
+export const TealButton: FC<buttonProps> = (props: {
+  size;
+  onClickHandler;
+  children;
+  fullWidth;
+  startIcon;
+}) => {
   const classes = useStyles();
   return (
-    <ColorButton variant="contained" color="primary" className={classes.margin} onClick={props.onClickHandler}>
+    <ColorButton
+      variant="contained"
+      color="primary"
+      className={classes.margin}
+      size={props.size}
+      onClick={props.onClickHandler}
+      fullWidth={props.fullWidth}
+      startIcon={props.startIcon}
+    >
       {props.children}
     </ColorButton>
   );
-}
+};

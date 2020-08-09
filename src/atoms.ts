@@ -39,7 +39,7 @@ export const calendlySettingAtom = atom({
       },
     },
     styles: {
-      height: "700px",
+      height: "850px",
     },
     text: "予約はこちらから",
   },
@@ -57,7 +57,7 @@ export const userAtom = atom({
 
 export const userLoadingAtom = atom({
   key: "userLoading",
-  default: false,
+  default: true,
 });
 
 export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {

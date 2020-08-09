@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import {
   calendlySettingAtom,
   radioAnswerWithName,
   useUser,
 } from "../../src/atoms";
-import { useRecoilState } from "recoil";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import Head from "next/dist/next-server/lib/head";
 import firebase from "../../firebase/clientApp";
 import { LoginRecommendationText } from "../../components/LoginRecommendationText";
 import { RadioQuestion } from "../../components/RadioQuestion";
 import { Calendly, CalendlyState } from "../../components/Calendly";
-import { meetOrVideo, radioSettings } from "../../src/settings/inputOption";
-import Link from "next/link";
 import { TealButton } from "../../components/ColorButton";
 import { FormSection } from "../../components/FormSection";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
-import Head from "next/dist/next-server/lib/head";
+import { meetOrVideo, radioSettings } from "../../src/settings/inputOption";
+import { Assignment } from "@material-ui/icons";
 
 const AuthWithNoSSR = dynamic(() => import("../../components/auth"), {
   ssr: false,
@@ -114,29 +115,35 @@ export default function CoachingPreparation({}: {
         {user && notText && calendlyState === CalendlyState.scheduled && (
           <>
             <FormSection>
-              <FormSectionTitle title={"事前質問にお答えください"} />
-              <p>
-                予約は完了しました。
-                <br />
-                {user.displayName}
-                さんとの対話がより有意義となるよう、以下から事前質問にお答え願います。
-              </p>
+              <p className={"text-lg"}>予約は完了です。</p>
             </FormSection>
-            <div className={"mt-4"}>
-              <Link href="/my-page">
-                <a>
-                  <TealButton>事前質問に答える</TealButton>
-                </a>
-              </Link>
-            </div>
+            <FormSection>
+              <FormSectionTitle title={"事前質問にお答えください"} />
+              より有意義な対話のため、
+              <br />
+              {user.displayName}さんについてお聞かせください。
+              <div className={"mt-4"}>
+                <Link href="/my-page">
+                  <a>
+                    <TealButton
+                      size={"large"}
+                      fullWidth={true}
+                      startIcon={<Assignment />}
+                    >
+                      事前質問に答える
+                    </TealButton>
+                  </a>
+                </Link>
+              </div>
+            </FormSection>
           </>
         )}
 
-        {["","テキスト"].includes(meetOrVideoState) && (
+        {["", "テキスト"].includes(meetOrVideoState) && (
           <div className={"mt-4"}>
             <Link href="/my-page">
               <a>
-                <TealButton>予約済みの方はこちら</TealButton>
+                <TealButton size={"large"}>予約済みの方はこちら</TealButton>
               </a>
             </Link>
           </div>
