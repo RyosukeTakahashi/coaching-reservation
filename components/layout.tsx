@@ -39,23 +39,23 @@ export default function Layout({
       <header className={styles.header}>
         {home ? (
           <>
-            <img
-              src={profileImgUrl}
-              className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
-              alt={name}
-            />
-            <h1 className={utilStyles.heading2Xl}>{name}</h1>
+            {/*<img*/}
+            {/*  src={profileImgUrl}*/}
+            {/*  className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}*/}
+            {/*  alt={name}*/}
+            {/*/>*/}
+            <h1 className={utilStyles.heading2Xl}>Ryo Murakami's Page</h1>
           </>
         ) : (
           <>
             <Link href="/">
-              <a>
-                <img
-                  src={profileImgUrl}
-                  className={`${styles.headerImage} ${utilStyles.borderCircle}`}
-                  alt={name}
-                />
-              </a>
+              {/*<a>*/}
+              {/*  <img*/}
+              {/*    src={profileImgUrl}*/}
+              {/*    className={`${styles.headerImage} ${utilStyles.borderCircle}`}*/}
+              {/*    alt={name}*/}
+              {/*  />*/}
+              {/*</a>*/}
             </Link>
             <h2 className={utilStyles.headingLg}>
               <Link href="/">
