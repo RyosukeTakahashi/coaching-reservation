@@ -130,7 +130,7 @@ export default function CoachingPreparation({}: {
                       fullWidth={true}
                       startIcon={<Assignment />}
                     >
-                      事前質問にと性格診断に答える
+                      事前質問と性格診断に答える
                     </TealButton>
                   </a>
                 </Link>
