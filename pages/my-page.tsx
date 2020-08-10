@@ -29,6 +29,8 @@ const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
   ssr: false,
 });
 
+//todo: googleログイン名前変更,(vercelドメイン変更）
+//todo: 事後アンケート form 作成。
 //todo: リファクタ コンポーネント分割, useEffect 移動, atom.tsでUserとったときにもうリアルタイム？
 //todo: 高速化 render 減らす
 
@@ -42,24 +44,20 @@ export default function MyPage({}: {}) {
   const [user] = useUser();
 
   const [otherOBTalk, setOtherOBTalk] = useState("");
-  const [talkThemeState, setTalkThemeState] = useRecoilState(
+  const [talkThemes, setTalkThemes] = useRecoilState(
     checkboxAnswerWithName(talkThemeStr)
   );
   const [reservations, setReservations] = useState([{}] as Reservation[]);
-  const [otherTalkTheme, setOtherTalkTheme] = useRecoilState(
-    otherTalkThemeAtom
-  );
   const [howFoundMurakami, setHowFoundMurakami] = useState("");
   const preparationAnswer = {
     otherOBTalk,
-    talkThemeState,
-    otherTalkTheme,
+    talkThemes,
     howFoundMurakami,
   };
 
   const [mbti, setMbti] = useRecoilState(radioAnswerWithName(mbtiStr));
   const [aOrT, setAOrT] = useRecoilState(radioAnswerWithName(aOrTStr));
-  const [seikakuNavi, setseikakuNavi] = useState("");
+  const [seikakuNavi, setSeikakuNavi] = useState("");
   const assessment = {
     mbti,
     aOrT,
@@ -72,6 +70,7 @@ export default function MyPage({}: {}) {
     const db = firebase.firestore();
     const unsubscribe = db
       .collection(`users/${user.uid}/reservations`)
+      .orderBy("dateTime", "desc") //datetimeがなければ取得できない
       .onSnapshot(async (querySnapshot) => {
         const reservations = await querySnapshot.docs.map((doc) => {
           const data = doc.data() as Reservation;
@@ -80,14 +79,13 @@ export default function MyPage({}: {}) {
         const latestReservation = reservations[0];
         setReservations(reservations);
         setOtherOBTalk(latestReservation.otherOBTalk);
-        setOtherTalkTheme(latestReservation.otherTalkTheme);
-        setTalkThemeState(latestReservation.talkThemeState);
+        setTalkThemes(latestReservation.talkThemes);
         setHowFoundMurakami(latestReservation.howFoundMurakami);
       });
     return () => {
       unsubscribe();
     };
-  }, [user]); //mount後と、userが読み込まれた(or変更された)後、再実行される
+  }, [user]);
 
   //listener for user document。後で異動。
   useEffect(() => {
@@ -96,7 +94,7 @@ export default function MyPage({}: {}) {
     const unsubscribe = db.doc(`users/${user.uid}`).onSnapshot(async (doc) => {
       setAOrT(doc.data().aOrT);
       setMbti(doc.data().mbti);
-      setseikakuNavi(doc.data().seikakuNavi);
+      setSeikakuNavi(doc.data().seikakuNavi);
     });
     return () => {
       unsubscribe();
@@ -156,20 +154,21 @@ export default function MyPage({}: {}) {
               </li>
             </ul>
             <h2 className={"text-xl mt-6"}>場所</h2>
-            <a
-                href="https://calendar.google.com/calendar/r"
-                target="_blank"
-            >
+            <a href="https://calendar.google.com/calendar/r" target="_blank">
               Googleカレンダー
-            </a>に追加された予定（以下の画像を参考）から、Google Meetを時刻になったらお開きください。
+            </a>
+            に追加された予定（以下の画像を参考）から、Google
+            Meetを時刻になったらお開きください。
             <div className={"flex justify-center"}>
-              <img src="/images/gcal_reservation.png" alt="Google Calendar" className={"mt-4 border-2 rounded-lg"}/>
-
+              <img
+                src="/images/gcal_reservation.png"
+                alt="Google Calendar"
+                className={"mt-4 border-2 rounded-lg"}
+              />
             </div>
-
-            <br/>設定が不安な方は予めGoogle Meetでマイクテストなどをして頂けますと幸いです。
-
-
+            <br />
+            設定が不安な方は予めGoogle
+            Meetでマイクテストなどをして頂けますと幸いです。
             <h2 className={"text-xl mt-12"}>事前質問</h2>
             <h3 className={"text-lg mt-5 mb-3"}>
               Q1. 他のOB/OGとはどのようなことを話し、学ばれましたか？
@@ -257,7 +256,7 @@ export default function MyPage({}: {}) {
               <input
                 name="seikakuNavi"
                 value={seikakuNavi}
-                onChange={(e) => setseikakuNavi(e.target.value)}
+                onChange={(e) => setSeikakuNavi(e.target.value)}
                 className={"p-2 border-2 border-teal-300 rounded-lg"}
               />
             </div>
@@ -320,12 +319,16 @@ export default function MyPage({}: {}) {
 
           <FormSection>
             <h2 className={"text-2xl"}>2回目以降の相談について</h2>
-            <p>2回目以降の相談/コーチングをお望みの場合、 責任を持って対応しますため、そのようなご依頼はコーチングのプロとしてお受けします（1時間 1500円）。</p>
-            <p>支払い方法は、LinePay/PayPay/銀行振り込み/クレジットカードなど対応しております。</p>
-
-            学生の方の1回目の相談は、無償ボランティアで対応しております。
+            <p>
+              2回目以降の相談/コーチングをお望みの場合、
+              責任を持って対応しますため、そのようなご依頼はコーチングのプロとしてお受けします（1時間
+              1500円）。
+            </p>
+            <p>
+              支払い方法は、LinePay/PayPay/銀行振り込み/クレジットカードなど対応しております。
+            </p>
+            <p>学生の方の1回目の相談は、無償ボランティアで対応しております。</p>
           </FormSection>
-
 
           <div className={"mt-5 flex justify-center"}>
             <TealButton onClickHandler={() => firebase.auth().signOut()}>

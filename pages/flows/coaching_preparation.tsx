@@ -118,7 +118,7 @@ export default function CoachingPreparation({}: {
               <p className={"text-lg"}>予約は完了です。</p>
             </FormSection>
             <FormSection>
-              <FormSectionTitle title={"事前質問にお答えください"} />
+              <FormSectionTitle title={"事前質問と性格診断にお答えください"} />
               より有意義な対話のため、
               <br />
               {user.displayName}さんについてお聞かせください。
@@ -130,7 +130,7 @@ export default function CoachingPreparation({}: {
                       fullWidth={true}
                       startIcon={<Assignment />}
                     >
-                      事前質問に答える
+                      事前質問にと性格診断に答える
                     </TealButton>
                   </a>
                 </Link>
@@ -139,7 +139,7 @@ export default function CoachingPreparation({}: {
           </>
         )}
 
-        {["", "テキスト"].includes(meetOrVideoState) && (
+        {(!user || ["", "テキスト"].includes(meetOrVideoState)) && (
           <div className={"mt-4"}>
             <Link href="/my-page">
               <a>

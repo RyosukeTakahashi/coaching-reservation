@@ -6,12 +6,13 @@ type User = {
 };
 
 type Reservation = {
-  id: string;
+  id?: string;
+  dateTime: Number;
   otherOBTalk: string;
-  otherTalkTheme: string;
-  talkThemeState: string[];
+  otherTalkTheme?: string;
+  talkThemes: string[];
   howFoundMurakami: string;
-}
+};
 interface CoachName {
   coachName: string;
 }
