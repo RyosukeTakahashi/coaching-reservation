@@ -6,11 +6,15 @@ export function ReservationDate() {
       <h2 className={"text-xl mt-4"}>日時</h2>
       <ul className={`list-disc pl-5 leading-8`}>
         <li>
-          予約日時は、Calendly.comからの予約確認メール /{" "}
-          <a href="https://calendar.google.com/calendar/r" target="_blank">
+          予約日時は、
+          <a href="https://calendar.google.com/calendar/r/search?q=calendly" target="_blank">
+            Gmail
+          </a>
+          {" / "}
+          <a href="https://calendar.google.com/calendar/r/search?q=calendly" target="_blank">
             Googleカレンダー
           </a>
-          をご覧ください。
+          をご参照ください。
         </li>
         <li>
           メールが届いてない場合、

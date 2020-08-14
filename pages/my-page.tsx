@@ -14,11 +14,9 @@ import {
   talkTheme as talkThemeStr,
 } from "../src/settings/inputOption";
 import { setReservation, setUserProfile } from "../src/fetchers";
-import dynamic from "next/dist/next-server/lib/dynamic";
 import { Snackbar } from "@material-ui/core";
 import { TealButton } from "../components/ColorButton";
 import { FormSection } from "../components/FormSection";
-import { FormSectionTitle } from "../components/FormSectionTitle";
 import { useProfileListener, useReservationListener } from "../lib/hooks";
 import { ReservationDate } from "../components/ReservationDate";
 import { Location } from "../components/Location";
@@ -27,12 +25,13 @@ import { PreparationArticles } from "../components/PreparationArticles";
 import { TwitterFollow } from "../components/TwitterFollow";
 import { NextCoachingPrice } from "../components/NextCoachingPrice";
 import { PersonalityAssessment } from "../components/PersonalityAssessment";
+import { Main } from "../components/Main";
+import { Cancellation } from "../components/Cancellation";
+import { MyPageLogin } from "../components/MyPageLogin";
+import { PromptReservation } from "../components/PromptReservation";
 
-const AuthWithNoSSR = dynamic(() => import("../components/auth"), {
-  ssr: false,
-});
-
-//todo: googleログイン名前変更,(vercelドメイン変更）
+//todo: よりtypescriptっぽく
+//todo: render減らす
 
 export default function MyPage({}: {}) {
   const [user] = useUser();
@@ -40,7 +39,7 @@ export default function MyPage({}: {}) {
   const [talkThemes, setTalkThemes] = useRecoilState(
     checkboxAnswerWithName(talkThemeStr)
   );
-  const [reservations, setReservations] = useState([{}] as Reservation[]);
+  const [reservations, setReservations] = useState([] as Reservation[]);
   const [howFoundMurakami, setHowFoundMurakami] = useState("");
   const preparationAnswer = {
     otherOBTalk,
@@ -64,109 +63,92 @@ export default function MyPage({}: {}) {
     setTalkThemes,
     setHowFoundMurakami
   );
-
   useProfileListener(user, setAOrT, setMbti, setSeikakuNavi);
 
-  if (!user)
-    return (
-      <>
-        <Head>
-          <title>ログイン</title>
-        </Head>
-        <div className="px-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
-          <main className={"px-3 w-full max-w-screen-sm"}>
-            <FormSection>
-              <FormSectionTitle title={"Googleでログインしてください"} />
-              <div>
-                予約情報の確認 / 事前質問の回答 / 性格診断結果の更新
-                ができます。
-              </div>
-              <AuthWithNoSSR />
-            </FormSection>
-          </main>
-        </div>
-      </>
-    );
+  if (!user) return <MyPageLogin />;
+  if (reservations.length === 0) return <PromptReservation user={user} />;
   return (
     <>
       <Head>
         <title>{user.displayName}さんの予約ページ</title>
       </Head>
-      <div className="px-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
-        <main className={"px-3 w-full max-w-screen-sm"}>
-          <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-            <h1 className={"text-2xl"}>直近の予約について</h1>
-            <ReservationDate />
-            <Location />
-            <PreparationQA
-              value={otherOBTalk}
-              onChange={(e) => setOtherOBTalk(e.target.value)}
-              onBlur={() =>
-                setReservation(user.uid, reservations[0].id, preparationAnswer)
-              }
-              value1={howFoundMurakami}
-              onChange1={(e) => setHowFoundMurakami(e.target.value)}
-            />
-            <div className={"mt-5"}>
-              <TealButton
-                onClickHandler={async () => {
-                  await setReservation(
-                    user.uid,
-                    reservations[0].id,
-                    preparationAnswer
-                  );
-                  setSnackbarState(true);
-                }}
-              >
-                事前回答を保存
-              </TealButton>
-            </div>
-            <div className={"mt-4"}>
-              <Link href="/flows/coaching_preparation">
-                <a>予約の取り直しはこちらから</a>
-              </Link>
-            </div>
-          </div>
-
-          <PersonalityAssessment
-            value={seikakuNavi}
-            onChange={(e) => setSeikakuNavi(e.target.value)}
-            onClickHandler={async () => {
-              await setUserProfile(user.uid, assessment);
-              setSnackbarState(true);
-            }}
+      <Main>
+        <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+          <h1 className={"text-2xl"}>直近の予約について</h1>
+          <ReservationDate />
+          <Location />
+          <PreparationQA
+            value={otherOBTalk}
+            onChange={(e) => setOtherOBTalk(e.target.value)}
+            onBlur={() =>
+              setReservation(user.uid, reservations[0].id, preparationAnswer)
+            }
+            value1={howFoundMurakami}
+            onChange1={(e) => setHowFoundMurakami(e.target.value)}
           />
-
-          <FormSection>
-            <PreparationArticles user={user} />
-          </FormSection>
-
-          <FormSection>
-            <TwitterFollow />
-          </FormSection>
-
-          <FormSection>
-            <NextCoachingPrice />
-          </FormSection>
-
-          <div className={"mt-5 flex justify-center"}>
-            <TealButton onClickHandler={() => firebase.auth().signOut()}>
-              Log Out
+          <div className={"mt-5"}>
+            <TealButton
+              onClickHandler={async () => {
+                await setReservation(
+                  user.uid,
+                  reservations[0].id,
+                  preparationAnswer
+                );
+                setSnackbarState(true);
+              }}
+            >
+              事前回答を保存
             </TealButton>
           </div>
+          <div className={"mt-4"}>
+            <Link href="/flows/coaching_preparation">
+              <a>予約の取り直しはこちらから</a>
+            </Link>
+          </div>
+        </div>
 
-          <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            open={snackbarState}
-            autoHideDuration={2500}
-            onClose={() => setSnackbarState(false)}
-            message="保存しました"
-          />
-        </main>
-      </div>
+        <PersonalityAssessment
+          value={seikakuNavi}
+          onChange={(e) => setSeikakuNavi(e.target.value)}
+          onClickHandler={async () => {
+            await setUserProfile(user.uid, assessment);
+            setSnackbarState(true);
+          }}
+        />
+
+        <FormSection>
+          <PreparationArticles user={user} />
+        </FormSection>
+
+        <FormSection>
+          <TwitterFollow />
+        </FormSection>
+
+        <FormSection>
+          <NextCoachingPrice />
+        </FormSection>
+
+        <FormSection>
+          <Cancellation />
+        </FormSection>
+
+        <div className={"mt-5 flex justify-center"}>
+          <TealButton onClickHandler={() => firebase.auth().signOut()}>
+            Log Out
+          </TealButton>
+        </div>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          open={snackbarState}
+          autoHideDuration={2500}
+          onClose={() => setSnackbarState(false)}
+          message="保存しました"
+        />
+      </Main>
     </>
   );
 }

@@ -20,6 +20,7 @@ export function useReservationListener(
           return { ...data, id: doc.id };
         });
         const latestReservation = reservations[0];
+        if (!latestReservation) return;
         setReservations(reservations);
         setOtherOBTalk(latestReservation.otherOBTalk);
         setTalkThemes(latestReservation.talkThemes);

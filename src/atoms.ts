@@ -2,6 +2,7 @@ import { atom, useRecoilState } from "recoil";
 import { useEffect } from "react";
 import firebase from "../firebase/clientApp";
 import { SetterOrUpdater } from "recoil/dist";
+import {CalendlyState} from "../components/Calendly";
 
 export const radioAnswerWithName = (questionName: string) => {
   return atom({
@@ -24,7 +25,7 @@ export const otherTalkThemeAtom = atom({
 
 export const calendlyStateAtom = atom({
   key: "calendlyState",
-  default: 1000,
+  default: CalendlyState.unshown,
 });
 
 export const calendlySettingAtom = atom({

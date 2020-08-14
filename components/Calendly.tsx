@@ -1,10 +1,12 @@
 import React from "react";
-import { calendlySettingAtom, useUser } from "../src/atoms";
+import { calendlySettingAtom, calendlyStateAtom, useUser } from "../src/atoms";
 import { CalendlyEventListener, InlineWidget } from "react-calendly";
 import { useRecoilState } from "recoil";
 import { addReservation } from "../src/fetchers";
 
 export enum CalendlyState {
+  unshown,
+  eventTypeViewed,
   datetimeSelected,
   scheduled,
 }
@@ -20,8 +22,14 @@ export const Calendly = React.memo((props: { setCalendlyState }) => {
       .setAttribute("style", "height: 570px;");
     window.scrollTo(0, document.body.scrollHeight);
   }, [props.setCalendlyState]);
+
   return (
-    <CalendlyEventListener onEventScheduled={onScheduled}>
+    <CalendlyEventListener
+      onEventScheduled={onScheduled}
+      onEventTypeViewed={() => {
+        props.setCalendlyState(CalendlyState.eventTypeViewed);
+      }}
+    >
       <InlineWidget {...calendlySetting} />
     </CalendlyEventListener>
   );
