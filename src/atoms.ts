@@ -2,7 +2,7 @@ import { atom, useRecoilState } from "recoil";
 import { useEffect } from "react";
 import firebase from "../firebase/clientApp";
 import { SetterOrUpdater } from "recoil/dist";
-import {CalendlyState} from "../components/Calendly";
+import { CalendlyState } from "../components/Calendly";
 
 export const radioAnswerWithName = (questionName: string) => {
   return atom({
@@ -28,32 +28,51 @@ export const calendlyStateAtom = atom({
   default: CalendlyState.unshown,
 });
 
+type CalendlySetting = {
+  url: string,
+  prefill: {
+    name: string,
+    email: string,
+    customAnswers: {
+      a1: string,
+    },
+  },
+  styles: {
+    height: string,
+  },
+  text: string,
+}
+
+const defaultCalendlySetting: CalendlySetting = {
+  url: "https://calendly.com/ryo-murakami/meeting",
+  prefill: {
+    name: "",
+    email: "",
+    customAnswers: {
+      a1: "",
+    },
+  },
+  styles: {
+    height: "850px",
+  },
+  text: "予約はこちらから",
+}
+
 export const calendlySettingAtom = atom({
   key: "calendlyState",
-  default: {
-    url: "https://calendly.com/ryo-murakami/meeting",
-    prefill: {
-      name: "",
-      email: "",
-      customAnswers: {
-        a1: "",
-      },
-    },
-    styles: {
-      height: "850px",
-    },
-    text: "予約はこちらから",
-  },
+  default: defaultCalendlySetting,
 });
+
+const defaultUser: User = {
+  uid: "",
+  displayName: "",
+  email: "",
+  photoURL: "",
+};
 
 export const userAtom = atom({
   key: "user",
-  default: {
-    uid: "",
-    displayName: "",
-    email: "",
-    photoURL: "",
-  },
+  default: defaultUser,
 });
 
 export const userLoadingAtom = atom({

@@ -3,13 +3,15 @@ import { FormSection } from "./FormSection";
 import { FormSectionTitle } from "./FormSectionTitle";
 import Link from "next/link";
 import React from "react";
+import { useUser } from "../src/atoms";
 
-export function PromptReservation(props: { user: User }) {
+export function PromptReservation() {
+  const [user] = useUser();
   return (
     <Main>
       <FormSection>
         <FormSectionTitle
-          title={`${props.user.displayName}さんの予約はまだないようです。`}
+          title={`${user.displayName}さんの予約はまだないようです。`}
         />
         <div>
           <Link href="/flows/coaching_preparation">

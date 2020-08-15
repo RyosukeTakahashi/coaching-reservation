@@ -30,7 +30,7 @@ import { Cancellation } from "../components/Cancellation";
 import { MyPageLogin } from "../components/MyPageLogin";
 import { PromptReservation } from "../components/PromptReservation";
 
-//todo: よりtypescriptっぽく
+//todo: firebaseデータ追加でmail通知
 //todo: render減らす
 
 export default function MyPage({}: {}) {
@@ -55,7 +55,6 @@ export default function MyPage({}: {}) {
     seikakuNavi,
   };
   const [snackbarState, setSnackbarState] = useState(false);
-
   useReservationListener(
     user,
     setReservations,
@@ -66,7 +65,7 @@ export default function MyPage({}: {}) {
   useProfileListener(user, setAOrT, setMbti, setSeikakuNavi);
 
   if (!user) return <MyPageLogin />;
-  if (reservations.length === 0) return <PromptReservation user={user} />;
+  if (reservations.length === 0) return <PromptReservation />;
   return (
     <>
       <Head>
@@ -117,7 +116,7 @@ export default function MyPage({}: {}) {
         />
 
         <FormSection>
-          <PreparationArticles user={user} />
+          <PreparationArticles />
         </FormSection>
 
         <FormSection>

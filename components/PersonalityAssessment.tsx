@@ -15,11 +15,16 @@ const monospaceTheme = createMuiTheme({
   },
 });
 
-export function PersonalityAssessment(props: {
+type AssessmentProps = {
   value: string;
   onChange: (e) => void;
   onClickHandler: () => Promise<void>;
-}) {
+};
+export const PersonalityAssessment: React.FC<AssessmentProps> = ({
+  value,
+  onChange,
+  onClickHandler,
+}) => {
   return (
     <div className="mt-4 px-3 py-4 bg-white rounded-lg">
       <h1 className={"text-2xl"}>性格診断</h1>
@@ -48,16 +53,14 @@ export function PersonalityAssessment(props: {
       <div>
         <input
           name="seikakuNavi"
-          value={props.value}
-          onChange={props.onChange}
+          value={value}
+          onChange={onChange}
           className={"p-2 border-2 border-teal-300 rounded-lg"}
         />
       </div>
       <div className={"mt-5"}>
-        <TealButton onClickHandler={props.onClickHandler}>
-          診断結果を保存
-        </TealButton>
+        <TealButton onClickHandler={onClickHandler}>診断結果を保存</TealButton>
       </div>
     </div>
   );
-}
+};

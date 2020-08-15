@@ -1,11 +1,13 @@
 import React from "react";
+import { useUser } from "../src/atoms";
 
-export function PreparationArticles(props: { user: User }) {
+export function PreparationArticles() {
+  const [user] = useUser();
   return (
     <>
       <h2 className={"text-2xl"}>読んでいただきたい参考記事</h2>
       <p>
-        当日は、{props.user.displayName}
+        当日は、{user.displayName}
         さんのお話をより伺うため、村上の自己紹介と会社紹介は基本的に省きます。
         そのため、以下をお読みいただけると幸いです。
       </p>

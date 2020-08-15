@@ -77,7 +77,6 @@ export default function CoachingPreparation({}: {
             <FormSection>
               <FormSectionTitle title={calendlySectionTitle} />
               <Calendly setCalendlyState={setCalendlyState} />
-              {/*<Calendly />*/}
             </FormSection>
           )}
 
