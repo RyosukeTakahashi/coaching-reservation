@@ -29,19 +29,19 @@ export const calendlyStateAtom = atom({
 });
 
 type CalendlySetting = {
-  url: string,
+  url: string;
   prefill: {
-    name: string,
-    email: string,
+    name: string;
+    email: string;
     customAnswers: {
-      a1: string,
-    },
-  },
+      a1: string;
+    };
+  };
   styles: {
-    height: string,
-  },
-  text: string,
-}
+    height: string;
+  };
+  text: string;
+};
 
 const defaultCalendlySetting: CalendlySetting = {
   url: "https://calendly.com/ryo-murakami/meeting",
@@ -56,7 +56,7 @@ const defaultCalendlySetting: CalendlySetting = {
     height: "850px",
   },
   text: "予約はこちらから",
-}
+};
 
 export const calendlySettingAtom = atom({
   key: "calendlyState",
@@ -97,10 +97,13 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
           const userDoc = await userDocRef.get();
           //add user to firestore if no document.
           if (userDoc.data() === undefined) {
-            await db
-              .collection("users")
-              .doc(uid)
-              .set({ displayNameInApp: displayName, photoURL, email });
+            const createdAt = Date.now();
+            await db.collection("users").doc(uid).set({
+              displayNameInApp: displayName,
+              photoURL,
+              email,
+              createdAt,
+            });
           }
           setUser({ uid, displayName, email, photoURL });
         } else setUser(null);
