@@ -30,9 +30,6 @@ import { Cancellation } from "../components/Cancellation";
 import { MyPageLogin } from "../components/MyPageLogin";
 import { PromptReservation } from "../components/PromptReservation";
 
-//todo: firebaseデータ追加でmail通知
-//todo: render減らす
-
 export default function MyPage({}: {}) {
   const [user] = useUser();
   const [otherOBTalk, setOtherOBTalk] = useState("");
