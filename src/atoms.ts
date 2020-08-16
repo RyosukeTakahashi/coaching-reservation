@@ -100,7 +100,7 @@ export const useUser = (): [User, SetterOrUpdater<User>, boolean] => {
             await db
               .collection("users")
               .doc(uid)
-              .set({ displayNameInApp: displayName, photoURL });
+              .set({ displayNameInApp: displayName, photoURL, email });
           }
           setUser({ uid, displayName, email, photoURL });
         } else setUser(null);
