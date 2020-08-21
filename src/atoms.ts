@@ -18,6 +18,11 @@ export const checkboxAnswerWithName = (questionName: string) => {
   });
 };
 
+export const reservationsAtom = atom({
+  key: "reservations",
+  default: [] as Reservation[],
+});
+
 export const otherTalkThemeAtom = atom({
   key: "talkTheme",
   default: "",

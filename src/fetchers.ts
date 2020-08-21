@@ -1,6 +1,6 @@
 import firebase from "../firebase/clientApp";
 
-export const setReservation = async (uid, resId, resState) => {
+export const updateServerReservation = async (uid, resId, resState) => {
   const db = firebase.firestore();
   await db
     .doc(`users/${uid}/reservations/${resId}`)

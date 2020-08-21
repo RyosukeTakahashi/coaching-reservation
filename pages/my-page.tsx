@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import firebase from "../firebase/clientApp";
 import { useRecoilState } from "recoil/dist";
-import { myPageSnackBarAtom, radioAnswerWithName, useUser } from "../src/atoms";
+import {myPageSnackBarAtom, radioAnswerWithName, reservationsAtom, useUser} from "../src/atoms";
 import { aOrT as aOrTStr, mbti as mbtiStr } from "../src/settings/inputOption";
 import { setUserProfile } from "../src/fetchers";
 import { Snackbar } from "@material-ui/core";
@@ -21,7 +21,7 @@ import { LatestReservation } from "../components/LatestReservation";
 
 export default function MyPage({}: {}) {
   const [user] = useUser();
-  const [reservations, setReservations] = useState([] as Reservation[]);
+  const [reservations, setReservations] = useRecoilState(reservationsAtom);
   const [mbti, setMbti] = useRecoilState(radioAnswerWithName(mbtiStr));
   const [aOrT, setAOrT] = useRecoilState(radioAnswerWithName(aOrTStr));
   const [seikakuNavi, setSeikakuNavi] = useState("");
@@ -73,7 +73,7 @@ export default function MyPage({}: {}) {
           <Cancellation />
         </FormSection>
 
-        <div className={"mt-5 flex justify-center"}>
+        <div className={"my-5 flex justify-center"}>
           <TealButton onClickHandler={() => firebase.auth().signOut()}>
             Log Out
           </TealButton>

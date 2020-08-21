@@ -1,18 +1,17 @@
 import { useEffect } from "react";
 import firebase from "../firebase/clientApp";
-import {useRecoilState} from "recoil/dist";
-import {checkboxAnswerWithName, howFoundMurakamiAtom, otherTalkThemeAtom} from "../src/atoms";
-import {talkTheme as talkThemeStr} from "../src/settings/inputOption";
+import { useSetRecoilState } from "recoil/dist";
+import {
+  checkboxAnswerWithName,
+  howFoundMurakamiAtom,
+  otherTalkThemeAtom,
+} from "../src/atoms";
+import { talkTheme as talkThemeStr } from "../src/settings/inputOption";
 
-export function useReservationListener(
-  user,
-  setReservations,
-) {
-  const [talkThemes, setTalkThemes] = useRecoilState(
-      checkboxAnswerWithName(talkThemeStr)
-  );
-  const [otherOBTalk, setOtherOBTalk] = useRecoilState(otherTalkThemeAtom);
-  const [howFoundMurakami, setHowFoundMurakami] = useRecoilState(howFoundMurakamiAtom);
+export function useReservationListener(user, setReservations) {
+  const setTalkThemes = useSetRecoilState(checkboxAnswerWithName(talkThemeStr));
+  const setOtherOBTalk = useSetRecoilState(otherTalkThemeAtom);
+  const setHowFoundMurakami = useSetRecoilState(howFoundMurakamiAtom);
   useEffect(() => {
     if (!user || user.uid === "") return;
     const db = firebase.firestore();

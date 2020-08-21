@@ -8,6 +8,8 @@ import {
 } from "../src/settings/inputOption";
 import { TealButton } from "./ColorButton";
 import React from "react";
+import {useRecoilState, useSetRecoilState} from "recoil/dist";
+import {myPageSnackBarAtom, radioAnswerWithName, useUser} from "../src/atoms";
 
 const monospaceTheme = createMuiTheme({
   typography: {
@@ -25,7 +27,11 @@ export const PersonalityAssessment: React.FC<AssessmentProps> = ({
   onChange,
   onClickHandler,
 }) => {
-  return (
+  const [user] = useUser();
+
+  const setSnackbarState = useSetRecoilState(myPageSnackBarAtom);
+
+    return (
     <>
       <h1 className={"text-2xl"}>性格診断</h1>
       <h2 className={"text-xl mt-4"}>16タイプ診断</h2>
