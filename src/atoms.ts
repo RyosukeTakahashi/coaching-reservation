@@ -23,9 +23,19 @@ export const otherTalkThemeAtom = atom({
   default: "",
 });
 
+export const howFoundMurakamiAtom = atom({
+  key: "howFoundMurakami",
+  default: "",
+});
+
 export const calendlyStateAtom = atom({
   key: "calendlyState",
   default: CalendlyState.unshown,
+});
+
+export const otherOBTalkAtom = atom({
+  key: "otherOBTalk",
+  default: "",
 });
 
 type CalendlySetting = {
@@ -61,6 +71,11 @@ const defaultCalendlySetting: CalendlySetting = {
 export const calendlySettingAtom = atom({
   key: "calendlyState",
   default: defaultCalendlySetting,
+});
+
+export const myPageSnackBarAtom = atom({
+  key: "myPageSnackBar",
+  default: false,
 });
 
 const defaultUser: User = {

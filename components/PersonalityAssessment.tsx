@@ -26,7 +26,7 @@ export const PersonalityAssessment: React.FC<AssessmentProps> = ({
   onClickHandler,
 }) => {
   return (
-    <div className="mt-4 px-3 py-4 bg-white rounded-lg">
+    <>
       <h1 className={"text-2xl"}>性格診断</h1>
       <h2 className={"text-xl mt-4"}>16タイプ診断</h2>
       <p>
@@ -61,6 +61,6 @@ export const PersonalityAssessment: React.FC<AssessmentProps> = ({
       <div className={"mt-5"}>
         <TealButton onClickHandler={onClickHandler}>診断結果を保存</TealButton>
       </div>
-    </div>
+    </>
   );
 };
