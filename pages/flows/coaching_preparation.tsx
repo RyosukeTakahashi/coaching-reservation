@@ -19,6 +19,14 @@ import { SocialMedia } from "../../components/SocialMedia";
 import { LinkToQA } from "../../components/LinkToQA";
 import { AlreadyReserved } from "../../components/AlreadyReserved";
 
+//前日リマインド（bcc:me）(変更したければこちらを。リンク。)
+//ポートフォリオ化
+//render減らす
+//テスト（そもそも機能が確定してないから書けない気がしている。でもコア機能なら？）
+//テスト（functions）
+//CI
+//boiler plate化
+
 export default function CoachingPreparation({}: {
   staticCollection: { name: string }[];
   allPostsData: { date: string; title: string; id: string }[];

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import Head from "next/head";
 import firebase from "../firebase/clientApp";
 import { useRecoilState } from "recoil/dist";
@@ -18,9 +17,6 @@ import { Snackbar } from "@material-ui/core";
 import { TealButton } from "../components/ColorButton";
 import { FormSection } from "../components/FormSection";
 import { useProfileListener, useReservationListener } from "../lib/hooks";
-import { ReservationDate } from "../components/ReservationDate";
-import { Location } from "../components/Location";
-import { PreparationQA } from "../components/PreparationQA";
 import { PreparationArticles } from "../components/PreparationArticles";
 import { TwitterFollow } from "../components/TwitterFollow";
 import { NextCoachingPrice } from "../components/NextCoachingPrice";
@@ -29,6 +25,7 @@ import { Main } from "../components/Main";
 import { Cancellation } from "../components/Cancellation";
 import { MyPageLogin } from "../components/MyPageLogin";
 import { PromptReservation } from "../components/PromptReservation";
+import { LatestReservation } from "../components/LatestReservation";
 
 export default function MyPage({}: {}) {
   const [user] = useUser();
@@ -69,11 +66,8 @@ export default function MyPage({}: {}) {
         <title>{user.displayName}さんの予約ページ</title>
       </Head>
       <Main>
-        <div className="mt-4 px-3 py-4 bg-white rounded-lg">
-          <h1 className={"text-2xl"}>直近の予約について</h1>
-          <ReservationDate />
-          <Location />
-          <PreparationQA
+        <FormSection>
+          <LatestReservation
             value={otherOBTalk}
             onChange={(e) => setOtherOBTalk(e.target.value)}
             onBlur={() =>
@@ -81,27 +75,16 @@ export default function MyPage({}: {}) {
             }
             value1={howFoundMurakami}
             onChange1={(e) => setHowFoundMurakami(e.target.value)}
+            onClickHandler={async () => {
+              await setReservation(
+                user.uid,
+                reservations[0].id,
+                preparationAnswer
+              );
+              setSnackbarState(true);
+            }}
           />
-          <div className={"mt-5"}>
-            <TealButton
-              onClickHandler={async () => {
-                await setReservation(
-                  user.uid,
-                  reservations[0].id,
-                  preparationAnswer
-                );
-                setSnackbarState(true);
-              }}
-            >
-              事前回答を保存
-            </TealButton>
-          </div>
-          <div className={"mt-4"}>
-            <Link href="/flows/coaching_preparation">
-              <a>予約の取り直しはこちらから</a>
-            </Link>
-          </div>
-        </div>
+        </FormSection>
 
         <PersonalityAssessment
           value={seikakuNavi}
