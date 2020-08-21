@@ -18,6 +18,7 @@ import { AuthDisplay } from "../../components/AuthDisplay";
 import { SocialMedia } from "../../components/SocialMedia";
 import { LinkToQA } from "../../components/LinkToQA";
 import { AlreadyReserved } from "../../components/AlreadyReserved";
+import {Main} from "../../components/Main";
 
 //前日リマインド（bcc:me）(変更したければこちらを。リンク。)
 //ポートフォリオ化
@@ -56,54 +57,52 @@ export default function CoachingPreparation({}: {
       <Head>
         <title>予約ページ</title>
       </Head>
-      <div className="py-3 bg-teal-200 min-h-screen text-gray-800 flex justify-center">
-        <main className={"px-3 w-full max-w-screen-sm"}>
+      <Main>
+        <FormSection>
+          <Introduction />
+        </FormSection>
+        <FormSection>
+          <AuthDisplay
+            user={user}
+            onClickHandler={() => firebase.auth().signOut()}
+          />
+        </FormSection>
+
+        {user && (
           <FormSection>
-            <Introduction />
+            <FormSectionTitle title={"ご希望の方法をお選びください"} />
+            <RadioQuestion {...radioSettings[meetOrVideo]} />
           </FormSection>
+        )}
+
+        {notText == false && meetOrVideoState != "" && (
           <FormSection>
-            <AuthDisplay
-              user={user}
-              onClickHandler={() => firebase.auth().signOut()}
-            />
+            <SocialMedia />
           </FormSection>
+        )}
 
-          {user && (
+        {user && notText && (
+          <FormSection>
+            <FormSectionTitle title={calendlySectionTitle} />
+            <Calendly setCalendlyState={setCalendlyState} />
+          </FormSection>
+        )}
+
+        {user && notText && calendlyState === CalendlyState.scheduled && (
+          <>
             <FormSection>
-              <FormSectionTitle title={"ご希望の方法をお選びください"} />
-              <RadioQuestion {...radioSettings[meetOrVideo]} />
+              <p className={"text-lg"}>予約は完了です。</p>
             </FormSection>
-          )}
-
-          {notText == false && meetOrVideoState != "" && (
             <FormSection>
-              <SocialMedia />
+              <LinkToQA user={user} />
             </FormSection>
-          )}
+          </>
+        )}
 
-          {user && notText && (
-            <FormSection>
-              <FormSectionTitle title={calendlySectionTitle} />
-              <Calendly setCalendlyState={setCalendlyState} />
-            </FormSection>
-          )}
-
-          {user && notText && calendlyState === CalendlyState.scheduled && (
-            <>
-              <FormSection>
-                <p className={"text-lg"}>予約は完了です。</p>
-              </FormSection>
-              <FormSection>
-                <LinkToQA user={user} />
-              </FormSection>
-            </>
-          )}
-
-          {(!user || ["", "テキスト"].includes(meetOrVideoState)) && (
-            <AlreadyReserved />
-          )}
-        </main>
-      </div>
+        {(!user || ["", "テキスト"].includes(meetOrVideoState)) && (
+          <AlreadyReserved />
+        )}
+      </Main>
     </>
   );
 }

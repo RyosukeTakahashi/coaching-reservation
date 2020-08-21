@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import firebase from "../firebase/clientApp";
-import { useSetRecoilState } from "recoil/dist";
+import {useRecoilState, useSetRecoilState} from "recoil/dist";
 import {
   checkboxAnswerWithName,
   howFoundMurakamiAtom,
-  otherTalkThemeAtom,
+  otherTalkThemeAtom, radioAnswerWithName, seikakuNaviAtom, useUser,
 } from "../src/atoms";
-import { talkTheme as talkThemeStr } from "../src/settings/inputOption";
+import {aOrT as aOrTStr, mbti as mbtiStr, talkTheme as talkThemeStr} from "../src/settings/inputOption";
 
 export function useReservationListener(user, setReservations) {
   const setTalkThemes = useSetRecoilState(checkboxAnswerWithName(talkThemeStr));
@@ -36,7 +36,12 @@ export function useReservationListener(user, setReservations) {
   }, [user]);
 }
 
-export function useProfileListener(user, setAOrT, setMbti, setSeikakuNavi) {
+export function useProfileListener() {
+  const setMbti = useSetRecoilState(radioAnswerWithName(mbtiStr));
+  const setAOrT = useSetRecoilState(radioAnswerWithName(aOrTStr));
+  const setSeikakuNavi = useSetRecoilState(seikakuNaviAtom);
+
+  const [user] = useUser();
   useEffect(() => {
     if (!user || user.uid === "") return;
     const db = firebase.firestore();

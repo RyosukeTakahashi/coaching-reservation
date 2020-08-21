@@ -33,6 +33,11 @@ export const howFoundMurakamiAtom = atom({
   default: "",
 });
 
+export const seikakuNaviAtom = atom({
+  key: "seikakuNavi",
+  default: "",
+});
+
 export const calendlyStateAtom = atom({
   key: "calendlyState",
   default: CalendlyState.unshown,

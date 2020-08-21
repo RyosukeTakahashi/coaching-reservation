@@ -8,8 +8,15 @@ import {
 } from "../src/settings/inputOption";
 import { TealButton } from "./ColorButton";
 import React from "react";
-import {useRecoilState, useSetRecoilState} from "recoil/dist";
-import {myPageSnackBarAtom, radioAnswerWithName, useUser} from "../src/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil/dist";
+import {
+  myPageSnackBarAtom,
+  radioAnswerWithName,
+  seikakuNaviAtom,
+  useUser,
+} from "../src/atoms";
+import { setUserProfile } from "../src/fetchers";
+import { useProfileListener } from "../lib/hooks";
 
 const monospaceTheme = createMuiTheme({
   typography: {
@@ -17,21 +24,18 @@ const monospaceTheme = createMuiTheme({
   },
 });
 
-type AssessmentProps = {
-  value: string;
-  onChange: (e) => void;
-  onClickHandler: () => Promise<void>;
-};
-export const PersonalityAssessment: React.FC<AssessmentProps> = ({
-  value,
-  onChange,
-  onClickHandler,
-}) => {
+export const PersonalityAssessment: React.FC = ({}) => {
   const [user] = useUser();
-
   const setSnackbarState = useSetRecoilState(myPageSnackBarAtom);
+  const [seikakuNavi, setSeikakuNavi] = useRecoilState(seikakuNaviAtom);
+  const assessment = {
+    mbti: useRecoilValue(radioAnswerWithName(mbtiStr)),
+    aOrT: useRecoilValue(radioAnswerWithName(aOrTStr)),
+    seikakuNavi,
+  };
+  useProfileListener();
 
-    return (
+  return (
     <>
       <h1 className={"text-2xl"}>性格診断</h1>
       <h2 className={"text-xl mt-4"}>16タイプ診断</h2>
@@ -59,13 +63,20 @@ export const PersonalityAssessment: React.FC<AssessmentProps> = ({
       <div>
         <input
           name="seikakuNavi"
-          value={value}
-          onChange={onChange}
+          value={seikakuNavi}
+          onChange={(e) => setSeikakuNavi(e.target.value)}
           className={"p-2 border-2 border-teal-300 rounded-lg"}
         />
       </div>
       <div className={"mt-5"}>
-        <TealButton onClickHandler={onClickHandler}>診断結果を保存</TealButton>
+        <TealButton
+          onClickHandler={async () => {
+            await setUserProfile(user.uid, assessment);
+            setSnackbarState(true);
+          }}
+        >
+          診断結果を保存
+        </TealButton>
       </div>
     </>
   );
