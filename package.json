@@ -19,6 +19,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "firebase": "^7.14.6",
     "firebaseui": "^4.5.1",
+    "googleapis": "^39.2.0",
     "gray-matter": "^4.0.2",
     "html2canvas": "^1.0.0-rc.5",
     "next": "^9.4.4",

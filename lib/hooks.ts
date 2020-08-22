@@ -10,7 +10,7 @@ import {
   checkboxAnswerWithName,
   howFoundMurakamiAtom,
   otherTalkThemeAtom,
-  radioAnswerWithName,
+  radioAnswerWithName, reservationDateAtom,
   reservationsAtom,
   seikakuNaviAtom,
   userAtom,
@@ -133,4 +133,11 @@ export function useCalendlySetter(
       });
     }
   }, [meetOrVideoState, user]);
+}
+
+export function useSetReservationDate(date:string) {
+  const setDate = useSetRecoilState(reservationDateAtom);
+  useEffect(() => {
+    setDate(date);
+  });
 }

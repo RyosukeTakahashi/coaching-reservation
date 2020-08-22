@@ -45,6 +45,12 @@ export const otherOBTalkAtom = atom({
   default: "",
 });
 
+export const reservationDateAtom = atom({
+  key: "reservationDate",
+  default: "YYYY-MM-DD",
+});
+
+
 type CalendlySetting = {
   url: string;
   prefill: {
@@ -83,11 +89,6 @@ export const calendlySettingAtom = atom({
 export const myPageSnackBarAtom = atom({
   key: "myPageSnackBar",
   default: false,
-});
-
-export const reservationDateAtom = atom({
-  key: "user",
-  default: "",
 });
 
 const defaultUser: User = {

@@ -3,9 +3,9 @@ import {
   radioSettings,
   talkTheme as talkThemeStr,
 } from "../src/settings/inputOption";
-import React from "react";
 import { useRecoilState } from "recoil/dist";
 import { howFoundMurakamiAtom, otherTalkThemeAtom } from "../src/atoms";
+import * as React from "react";
 
 type QAProps = {
   onBlur: () => Promise<void>;
@@ -20,10 +20,9 @@ export const PreparationQA: React.FC<QAProps> = ({ onBlur }) => {
   return (
     <>
       <h2 className={"text-xl mt-6 mb-5"}>事前質問</h2>
-      <h3 className={"text-lg mt-7 mb-5"}>
+      <h3 className={"text-lg mt-8 mb-5"}>
         Q1. 他のOB/OGからは、何を学ばれましたか？
       </h3>
-      <p>（なければ、「なし」とご記入ください。）</p>
       <textarea
         name="otherOBTalk"
         value={otherOBTalk}
@@ -31,7 +30,8 @@ export const PreparationQA: React.FC<QAProps> = ({ onBlur }) => {
         rows={3}
         cols={30}
         onBlur={onBlur}
-        className={"p-2 mb-2 border-2 border-teal-300 rounded-lg"}
+        placeholder={"なければその旨をご記入ください"}
+        className={"p-2 border-2 border-teal-300 rounded-lg"}
       />
       <h3 className={"text-lg mt-8 mb-5"}>
         Q2. どんな内容をお話になりたいですか？
