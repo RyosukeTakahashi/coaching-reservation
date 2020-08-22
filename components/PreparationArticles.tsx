@@ -32,7 +32,6 @@ export function PreparationArticles() {
           <a href="http://bit.ly/3bNFmNP" target="_blank">
             『コーチャブルになる方法』
           </a>
-          （コーチング前に）
         </li>
       </ul>
       <p>

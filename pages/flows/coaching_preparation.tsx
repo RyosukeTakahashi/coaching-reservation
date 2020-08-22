@@ -20,7 +20,6 @@ import { Main } from "../../components/Main";
 //前日リマインド（bcc:me）(変更したければこちらを。リンク。)
 //UIの文字列 LangFileに
 //ポートフォリオ化
-//memo化
 //テスト（一部コア機能のテストを書いてボイラープレートに）
 //テスト（functions）
 //CI

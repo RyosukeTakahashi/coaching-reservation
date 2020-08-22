@@ -1,39 +1,22 @@
 import React from "react";
-import { atom, useRecoilValue } from "recoil/dist";
+import { useLatestEvent } from "../lib/hooks";
+import { formatTime } from "../lib/utils";
 
 export function ReservationDate() {
-  const date = useRecoilValue(
-    atom({
-      key: "reservationDate",
-      default: ""
-    })
+  const { event, isLoading, isError } = useLatestEvent();
+  const startTime = event ? formatTime(event.start) : "読込中...";
+  const hangout = event ? (
+    <a href={event.hangoutLink} target="_blank">
+      こちらからGoogle Meetを開く
+    </a>
+  ) : (
+    <span>読込中...</span>
   );
-
   return (
     <>
-      <h2 className={"text-xl mt-4"}>日時</h2>
       <ul className={`list-disc pl-5 leading-8`}>
-        <li>
-          予約日時は、{date}
-          <a
-            href="https://calendar.google.com/calendar/r/search?q=calendly"
-            target="_blank"
-          >
-            Googleカレンダー
-          </a>
-          をご参照ください。
-        </li>
-        <li>
-          カレンダーが見れない場合、
-          <a href="https://twitter.com/ryo_mura_brains" target="_blank">
-            Twitter
-          </a>
-          {" / "}
-          <a href="https://www.facebook.com/ryo.murakami.3998" target="_blank">
-            Facebook
-          </a>
-          でお問い合わせください。
-        </li>
+        <li>日時 : {startTime}</li>
+        <li>場所 : {hangout}</li>
       </ul>
     </>
   );

@@ -13,7 +13,7 @@ export function PromptReservation() {
     <Main>
       <FormSection>
         <FormSectionTitle
-          title={`${user.displayName}さんの予約はまだないようです。`}
+          title={`${user.displayName}さんの予約はまだありません`}
         />
         <div>
           <Link href="/flows/coaching_preparation">

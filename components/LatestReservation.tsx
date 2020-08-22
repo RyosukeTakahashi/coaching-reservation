@@ -29,7 +29,6 @@ export function LatestReservation() {
     <>
       <FormSectionTitle title={"直近の予約について"} />
       <ReservationDate />
-      <Location />
       <PreparationQA
         onBlur={async () =>
           await updateServerReservation(

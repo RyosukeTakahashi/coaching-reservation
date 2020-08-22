@@ -20,7 +20,7 @@ export const PreparationQA: React.FC<QAProps> = ({ onBlur }) => {
   return (
     <>
       <h2 className={"text-xl mt-6 mb-5"}>事前質問</h2>
-      <h3 className={"text-lg mt-8 mb-5"}>
+      <h3 className={"text-lg mb-5"}>
         Q1. 他のOB/OGからは、何を学ばれましたか？
       </h3>
       <textarea

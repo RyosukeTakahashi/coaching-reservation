@@ -10,7 +10,7 @@ import {
   checkboxAnswerWithName,
   howFoundMurakamiAtom,
   otherTalkThemeAtom,
-  radioAnswerWithName, reservationDateAtom,
+  radioAnswerWithName,
   reservationsAtom,
   seikakuNaviAtom,
   userAtom,
@@ -21,6 +21,7 @@ import {
   mbti as mbtiStr,
   talkTheme as talkThemeStr,
 } from "../src/settings/inputOption";
+import useSWR from "swr";
 
 export function useReservationListener() {
   const setTalkThemes = useSetRecoilState(checkboxAnswerWithName(talkThemeStr));
@@ -40,7 +41,10 @@ export function useReservationListener() {
           return { ...data, id: doc.id };
         });
         const latestReservation = reservations[0];
-        if (!latestReservation) return;
+        if (!latestReservation) {
+          setReservations([]);
+          return;
+        }
         setReservations(reservations);
         setOtherOBTalk(latestReservation.otherOBTalk);
         setTalkThemes(latestReservation.talkThemes);
@@ -135,9 +139,16 @@ export function useCalendlySetter(
   }, [meetOrVideoState, user]);
 }
 
-export function useSetReservationDate(date:string) {
-  const setDate = useSetRecoilState(reservationDateAtom);
-  useEffect(() => {
-    setDate(date);
-  });
+export function useLatestEvent() {
+  const eventFetcher = (uri) => fetch(uri).then((res) => res.json());
+  const [user] = useUser();
+  const { data, error } = useSWR(
+    `/api/calendarEvent/${user.email}`,
+    eventFetcher
+  );
+  return {
+    event: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
 }
