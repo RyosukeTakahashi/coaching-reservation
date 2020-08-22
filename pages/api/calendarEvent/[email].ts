@@ -34,13 +34,22 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       client_secret,
       redirect_uris[0]
     );
-
+    const accessToken = {
+      access_token: process.env.GOOGLE_ACCESS_TOKEN,
+      refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+      scope: "https://www.googleapis.com/auth/calendar.readonly",
+      token_type: "Bearer",
+      expiry_date: 1598096466225,
+    };
+    oAuth2Client.setCredentials(accessToken);
+    callback(oAuth2Client);
     // Check if we have previously stored a token.
-    fs.readFile(TOKEN_PATH, null, (err, token: string) => {
-      if (err) return getAccessToken(oAuth2Client, callback);
-      oAuth2Client.setCredentials(JSON.parse(token));
-      callback(oAuth2Client);
-    });
+    // fs.readFile(TOKEN_PATH, null, (err, token: string) => {
+    // if (err) return getAccessToken(oAuth2Client, callback);
+    // oAuth2Client.setCredentials(JSON.parse(token));
+    // oAuth2Client.setCredentials(accessToken);
+    // callback(oAuth2Client);
+    // });
   }
 
   /**
