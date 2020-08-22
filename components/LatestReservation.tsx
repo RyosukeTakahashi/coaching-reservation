@@ -14,6 +14,8 @@ import {
 } from "../src/atoms";
 import { talkTheme as talkThemeStr } from "../src/settings/inputOption";
 import { updateServerReservation } from "../src/fetchers";
+import { FormSectionTitle } from "./FormSectionTitle";
+import React from "react";
 
 export function LatestReservation() {
   const [user] = useUser();
@@ -26,7 +28,7 @@ export function LatestReservation() {
   const setSnackbarState = useSetRecoilState(myPageSnackBarAtom);
   return (
     <>
-      <h1 className={"text-2xl"}>直近の予約について</h1>
+      <FormSectionTitle title={"直近の予約について"} />
       <ReservationDate />
       <Location />
       <PreparationQA

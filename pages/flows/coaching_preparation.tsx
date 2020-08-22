@@ -18,12 +18,12 @@ import { AuthDisplay } from "../../components/AuthDisplay";
 import { SocialMedia } from "../../components/SocialMedia";
 import { LinkToQA } from "../../components/LinkToQA";
 import { AlreadyReserved } from "../../components/AlreadyReserved";
-import {Main} from "../../components/Main";
+import { Main } from "../../components/Main";
 
 //前日リマインド（bcc:me）(変更したければこちらを。リンク。)
 //ポートフォリオ化
-//render減らす
-//テスト（そもそも機能が確定してないから書けない気がしている。でもコア機能なら？）
+//render減らすa
+//テスト（一部コア機能のテストを書いてボイラープレートに）
 //テスト（functions）
 //CI
 //boiler plate化

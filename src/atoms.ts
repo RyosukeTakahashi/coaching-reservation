@@ -20,7 +20,7 @@ export const checkboxAnswerWithName = (questionName: string) => {
 
 export const reservationsAtom = atom({
   key: "reservations",
-  default: [] as Reservation[],
+  default: null as Reservation[],
 });
 
 export const otherTalkThemeAtom = atom({

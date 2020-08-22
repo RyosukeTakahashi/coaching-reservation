@@ -1,14 +1,11 @@
-import React, { useState } from "react";
 import Head from "next/head";
 import firebase from "../firebase/clientApp";
-import { useRecoilState } from "recoil/dist";
-import {myPageSnackBarAtom, radioAnswerWithName, reservationsAtom, seikakuNaviAtom, useUser} from "../src/atoms";
-import { aOrT as aOrTStr, mbti as mbtiStr } from "../src/settings/inputOption";
-import { setUserProfile } from "../src/fetchers";
+import { useRecoilState, useRecoilValue } from "recoil/dist";
+import { myPageSnackBarAtom, reservationsAtom, useUser } from "../src/atoms";
 import { Snackbar } from "@material-ui/core";
 import { TealButton } from "../components/ColorButton";
 import { FormSection } from "../components/FormSection";
-import { useProfileListener, useReservationListener } from "../lib/hooks";
+import { useReservationListener } from "../lib/hooks";
 import { PreparationArticles } from "../components/PreparationArticles";
 import { TwitterFollow } from "../components/TwitterFollow";
 import { NextCoachingPrice } from "../components/NextCoachingPrice";
@@ -18,14 +15,18 @@ import { Cancellation } from "../components/Cancellation";
 import { MyPageLogin } from "../components/MyPageLogin";
 import { PromptReservation } from "../components/PromptReservation";
 import { LatestReservation } from "../components/LatestReservation";
+import { LoadingUser } from "../components/LoadingUser";
+import { LoadingReservations } from "../components/LoadingReservations";
 
 export default function MyPage({}: {}) {
-  const [user] = useUser();
-  const [reservations, setReservations] = useRecoilState(reservationsAtom);
+  const [user, , loadingUser] = useUser();
+  const reservations = useRecoilValue(reservationsAtom);
   const [snackbarState, setSnackbarState] = useRecoilState(myPageSnackBarAtom);
-  useReservationListener(user, setReservations);
+  useReservationListener();
 
+  if (loadingUser) return <LoadingUser />;
   if (!user) return <MyPageLogin />;
+  if (!reservations) return <LoadingReservations />;
   if (reservations.length === 0) return <PromptReservation />;
   return (
     <>
@@ -38,7 +39,7 @@ export default function MyPage({}: {}) {
         </FormSection>
 
         <FormSection>
-          <PersonalityAssessment/>
+          <PersonalityAssessment />
         </FormSection>
 
         <FormSection>

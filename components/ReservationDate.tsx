@@ -7,17 +7,16 @@ export function ReservationDate() {
       <ul className={`list-disc pl-5 leading-8`}>
         <li>
           予約日時は、
-          <a href="https://calendar.google.com/calendar/r/search?q=calendly" target="_blank">
-            Gmail
-          </a>
-          {" / "}
-          <a href="https://calendar.google.com/calendar/r/search?q=calendly" target="_blank">
+          <a
+            href="https://calendar.google.com/calendar/r/search?q=calendly"
+            target="_blank"
+          >
             Googleカレンダー
           </a>
           をご参照ください。
         </li>
         <li>
-          メールが届いてない場合、
+          カレンダーが見れない場合、
           <a href="https://twitter.com/ryo_mura_brains" target="_blank">
             Twitter
           </a>
