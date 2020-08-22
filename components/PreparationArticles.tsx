@@ -1,6 +1,6 @@
 import React from "react";
-import { useUser } from "../src/atoms";
 import { FormSectionTitle } from "./FormSectionTitle";
+import {useUser} from "../lib/hooks";
 
 export function PreparationArticles() {
   const [user] = useUser();

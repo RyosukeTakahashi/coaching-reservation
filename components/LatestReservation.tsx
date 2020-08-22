@@ -10,12 +10,13 @@ import {
   myPageSnackBarAtom,
   otherTalkThemeAtom,
   reservationsAtom,
-  useUser,
+
 } from "../src/atoms";
 import { talkTheme as talkThemeStr } from "../src/settings/inputOption";
 import { updateServerReservation } from "../src/fetchers";
 import { FormSectionTitle } from "./FormSectionTitle";
 import React from "react";
+import {useUser} from "../lib/hooks";
 
 export function LatestReservation() {
   const [user] = useUser();

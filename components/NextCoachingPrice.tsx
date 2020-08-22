@@ -8,8 +8,7 @@ export function NextCoachingPrice() {
       <ul className={`list-disc pl-5 leading-8`}>
         <li>
           2回目以降のコーチングをお望みの場合、
-          責任ある対応をするため、コーチングのプロとしてお受けします（1時間
-          1500円）。
+          責任ある対応をするため、1500円/1時間 でお受けします。
         </li>
         <li>
           支払い方法は、LinePay/PayPay/銀行振り込み/クレジットなど対応しております。

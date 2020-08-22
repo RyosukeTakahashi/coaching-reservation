@@ -1,11 +1,12 @@
 import Head from "next/head";
+import { GetServerSideProps } from "next";
 import firebase from "../firebase/clientApp";
-import { useRecoilState, useRecoilValue } from "recoil/dist";
-import { myPageSnackBarAtom, reservationsAtom, useUser } from "../src/atoms";
+import {useRecoilState, useRecoilValue} from "recoil/dist";
+import {myPageSnackBarAtom, reservationsAtom} from "../src/atoms";
 import { Snackbar } from "@material-ui/core";
 import { TealButton } from "../components/ColorButton";
 import { FormSection } from "../components/FormSection";
-import { useReservationListener } from "../lib/hooks";
+import { useReservationListener, useUser } from "../lib/hooks";
 import { PreparationArticles } from "../components/PreparationArticles";
 import { TwitterFollow } from "../components/TwitterFollow";
 import { NextCoachingPrice } from "../components/NextCoachingPrice";
@@ -18,7 +19,7 @@ import { LatestReservation } from "../components/LatestReservation";
 import { LoadingUser } from "../components/LoadingUser";
 import { LoadingReservations } from "../components/LoadingReservations";
 
-export default function MyPage({}: {}) {
+export default function MyPage({date, location}: { date: string; location: string }) {
   const [user, , loadingUser] = useUser();
   const reservations = useRecoilValue(reservationsAtom);
   const [snackbarState, setSnackbarState] = useRecoilState(myPageSnackBarAtom);
@@ -78,3 +79,9 @@ export default function MyPage({}: {}) {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: { date: "2020-08-22", location: "meetUrl" },
+  };
+};

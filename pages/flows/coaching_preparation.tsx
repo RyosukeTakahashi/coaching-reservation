@@ -1,18 +1,15 @@
 import React, { useState } from "react";
+import { GetServerSideProps } from "next";
 import Head from "next/dist/next-server/lib/head";
 import firebase from "../../firebase/clientApp";
 import { useRecoilState } from "recoil";
-import {
-  calendlySettingAtom,
-  radioAnswerWithName,
-  useUser,
-} from "../../src/atoms";
+import { calendlySettingAtom, radioAnswerWithName } from "../../src/atoms";
 import { RadioQuestion } from "../../components/RadioQuestion";
 import { Calendly, CalendlyState } from "../../components/Calendly";
 import { FormSection } from "../../components/FormSection";
 import { FormSectionTitle } from "../../components/FormSectionTitle";
 import { meetOrVideo, radioSettings } from "../../src/settings/inputOption";
-import { useCalendlySetter } from "../../lib/hooks";
+import { useCalendlySetter, useUser } from "../../lib/hooks";
 import { Introduction } from "../../components/Introduction";
 import { AuthDisplay } from "../../components/AuthDisplay";
 import { SocialMedia } from "../../components/SocialMedia";
@@ -21,8 +18,9 @@ import { AlreadyReserved } from "../../components/AlreadyReserved";
 import { Main } from "../../components/Main";
 
 //前日リマインド（bcc:me）(変更したければこちらを。リンク。)
+//UIの文字列 LangFileに
 //ポートフォリオ化
-//render減らすa
+//memo化
 //テスト（一部コア機能のテストを書いてボイラープレートに）
 //テスト（functions）
 //CI

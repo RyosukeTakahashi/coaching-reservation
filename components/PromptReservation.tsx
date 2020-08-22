@@ -3,8 +3,9 @@ import { FormSection } from "./FormSection";
 import { FormSectionTitle } from "./FormSectionTitle";
 import Link from "next/link";
 import React from "react";
-import {userAtom, useUser} from "../src/atoms";
+import {userAtom} from "../src/atoms";
 import {useRecoilValue} from "recoil/dist";
+import {useUser} from "../lib/hooks";
 
 export function PromptReservation() {
   const user = useRecoilValue(userAtom);

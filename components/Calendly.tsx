@@ -1,8 +1,9 @@
 import React from "react";
-import { calendlySettingAtom, calendlyStateAtom, useUser } from "../src/atoms";
+import { calendlySettingAtom } from "../src/atoms";
 import { CalendlyEventListener, InlineWidget } from "react-calendly";
 import { useRecoilState } from "recoil";
 import { addReservation } from "../src/fetchers";
+import { useUser } from "../lib/hooks";
 
 export enum CalendlyState {
   unshown,

@@ -13,10 +13,10 @@ import {
   myPageSnackBarAtom,
   radioAnswerWithName,
   seikakuNaviAtom,
-  useUser,
+
 } from "../src/atoms";
 import { setUserProfile } from "../src/fetchers";
-import { useProfileListener } from "../lib/hooks";
+import {useProfileListener, useUser} from "../lib/hooks";
 import { FormSectionTitle } from "./FormSectionTitle";
 
 const monospaceTheme = createMuiTheme({

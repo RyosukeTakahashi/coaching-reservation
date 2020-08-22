@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { radioAnswerWithName, useUser } from "../src/atoms";
+import { radioAnswerWithName} from "../src/atoms";
 import {useRecoilState, useSetRecoilState} from "recoil/dist";
 import { setUserProfile } from "../src/fetchers";
 import Radio from "@material-ui/core/Radio";
@@ -8,6 +8,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { withStyles } from "@material-ui/core/styles";
 import { teal } from "@material-ui/core/colors";
+import {useUser} from "../lib/hooks";
 
 const TealRadio = withStyles({
   root: {

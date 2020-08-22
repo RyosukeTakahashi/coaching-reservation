@@ -1,7 +1,8 @@
-import { otherTalkThemeAtom, useUser } from "../src/atoms";
+import { otherTalkThemeAtom} from "../src/atoms";
 import React from "react";
 import { useRecoilState } from "recoil";
 import { updateServerReservation } from "../src/fetchers";
+import {useUser} from "../lib/hooks";
 
 export function OtherTalkTheme(props: { resId; preparationAnswer }) {
   const [otherTalkTheme, setOtherTalkTheme] = useRecoilState(

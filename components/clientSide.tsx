@@ -1,6 +1,6 @@
 import React from "react";
 import { useDocument, useCollection } from "@nandorojo/swr-firestore";
-import { useUser } from "../src/atoms";
+import {useUser} from "../lib/hooks";
 
 export default function ClientSide(props: {
   setName: React.Dispatch<React.SetStateAction<string>>;

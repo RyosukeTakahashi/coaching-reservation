@@ -3,7 +3,7 @@ import styles from "./layout.module.css";
 import utilStyles from "../styles/utils.module.css";
 import Link from "next/link";
 import React from "react";
-import { useUser } from "../src/atoms";
+import {useUser} from "../lib/hooks";
 
 const defaultName = "Login to show your name";
 export const siteTitle = "Next.js Sample Website";
