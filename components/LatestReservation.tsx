@@ -1,5 +1,4 @@
 import { ReservationDate } from "./ReservationDate";
-import { Location } from "./Location";
 import { PreparationQA } from "./PreparationQA";
 import { TealButton } from "./ColorButton";
 import Link from "next/link";

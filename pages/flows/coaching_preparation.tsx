@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { GetServerSideProps } from "next";
 import Head from "next/dist/next-server/lib/head";
 import firebase from "../../firebase/clientApp";
 import { useRecoilState } from "recoil";
@@ -17,9 +16,7 @@ import { LinkToQA } from "../../components/LinkToQA";
 import { AlreadyReserved } from "../../components/AlreadyReserved";
 import { Main } from "../../components/Main";
 
-//前日リマインド（bcc:me）(変更したければこちらを。リンク。)
 //UIの文字列 LangFileに
-//ポートフォリオ化
 //テスト（一部コア機能のテストを書いてボイラープレートに）
 //テスト（functions）
 //CI

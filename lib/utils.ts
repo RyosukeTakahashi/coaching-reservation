@@ -13,6 +13,6 @@ export const formatTime = (datetimeStr) => {
   const hh = date.getHours();
   const mm = date.getMinutes();
   return `${YYYY}-${(MM > 9 ? "" : "0") + MM}-${(DD > 9 ? "" : "0") + DD} ${
-      (hh > 9 ? "" : "0") + hh
+    (hh > 9 ? "" : "0") + hh
   }:${(mm > 9 ? "" : "0") + mm}`;
 };
