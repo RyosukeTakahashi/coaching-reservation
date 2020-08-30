@@ -1,7 +1,10 @@
 import Head from "next/head";
 import firebase from "../firebase/clientApp";
 import { useRecoilState, useRecoilValue } from "recoil/dist";
-import { myPageSnackBarAtom, reservationsAtom } from "../src/atoms";
+import {
+  myPageSnackBarAtom,
+  reservationsAtom,
+} from "../src/atoms";
 import { Snackbar } from "@material-ui/core";
 import { TealButton } from "../components/ColorButton";
 import { FormSection } from "../components/FormSection";
@@ -24,7 +27,6 @@ export default function MyPage({}: {}) {
   const [snackbarState, setSnackbarState] = useRecoilState(myPageSnackBarAtom);
   useReservationListener();
 
-  console.log(reservations);
   if (loadingUser) return <LoadingUser />;
   if (!user) return <MyPageLogin />;
   if (!reservations) return <LoadingReservations />;
@@ -34,6 +36,7 @@ export default function MyPage({}: {}) {
       <Head>
         <title>{user.displayName}さんの予約ページ</title>
       </Head>
+
       <Main>
         <FormSection>
           <LatestReservation />

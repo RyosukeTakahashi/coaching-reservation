@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/dist/next-server/lib/head";
 import firebase from "../../firebase/clientApp";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { calendlySettingAtom, radioAnswerWithName } from "../../src/atoms";
 import { RadioQuestion } from "../../components/RadioQuestion";
 import { Calendly, CalendlyState } from "../../components/Calendly";
@@ -25,12 +25,18 @@ export default function CoachingPreparation({}: {
   staticCollection: { name: string }[];
   allPostsData: { date: string; title: string; id: string }[];
 }) {
-  const [meetOrVideoState] = useRecoilState(radioAnswerWithName(meetOrVideo));
+  const meetOrVideoState = useRecoilValue(radioAnswerWithName(meetOrVideo));
   const [user] = useUser();
   const [calendlySetting, setCalendlySetting] = useRecoilState(
     calendlySettingAtom
   );
   const [calendlyState, setCalendlyState] = useState(CalendlyState.unshown);
+  const calendlySectionTitle =
+    calendlyState == CalendlyState.unshown
+      ? "以下から空き枠をご予約ください(カレンダー読込中)"
+      : "以下から空き枠をご予約ください";
+
+  const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
 
   useCalendlySetter(
     user,
@@ -38,13 +44,6 @@ export default function CoachingPreparation({}: {
     calendlySetting,
     meetOrVideoState
   );
-
-  const calendlySectionTitle =
-    calendlyState == CalendlyState.unshown
-      ? "以下から空き枠をご予約ください(カレンダー読込中)"
-      : "以下から空き枠をご予約ください";
-
-  const notText = ["対面", "ビデオチャット"].includes(meetOrVideoState);
   return (
     <>
       <Head>
