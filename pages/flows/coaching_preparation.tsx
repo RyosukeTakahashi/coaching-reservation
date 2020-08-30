@@ -17,9 +17,8 @@ import { AlreadyReserved } from "../../components/AlreadyReserved";
 import { Main } from "../../components/Main";
 
 //UIの文字列 LangFileに
-//テスト（一部コア機能のテストを書いてボイラープレートに）
-//テスト（functions）
-//CI
+//テスト（一部コア機能のテストを書いてボイラープレートに）, CI
+//汎用化
 //boiler plate化
 
 export default function CoachingPreparation({}: {

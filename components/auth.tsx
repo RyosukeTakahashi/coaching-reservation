@@ -16,6 +16,8 @@ const uiConfig = {
     signInSuccessWithAuthResult: (authResult) => false, // Avoid redirects after sign-in.
   },
   // add localhost:3000 as origin at https://console.developers.google.com/apis/credentials/oauthclient/
+  // firebase consoleからsecretを変える必要のある場合がある
+  // https://serverfault.com/questions/949696/firebase-auth-error-getting-access-token-from-google-oidc
   credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
 };
 
