@@ -47,9 +47,8 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       singleEvents: true,
       orderBy: "startTime",
     });
-
     const events = response.data.items.filter(
-      (event) => event.attendees[0].responseStatus === "accepted"
+      (event) => event.attendees?.[0].responseStatus === "accepted"
     );
     if (!events || events.length === 0) {
       res.status(404).json({ error: "no events" });

@@ -12,8 +12,8 @@ export function ReservationDate() {
   const hangout = () => {
     if (event)
       return (
-        <a href={event.hangoutLink} target="_blank">
-          こちらからGoogle Meetを開く
+        <a href={process.env.NEXT_PUBLIC_ZOOM_URL} target="_blank">
+          こちらからZoomリンクを開く
         </a>
       );
     if (isLoading) return <span>読込中...</span>;
