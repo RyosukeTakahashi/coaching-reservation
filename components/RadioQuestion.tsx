@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { radioAnswerWithName} from "../src/atoms";
-import {useRecoilState, useSetRecoilState} from "recoil/dist";
+import { radioAnswerWithName } from "../src/atoms";
+import { useRecoilState } from "recoil";
 import { setUserProfile } from "../src/fetchers";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -8,7 +8,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { withStyles } from "@material-ui/core/styles";
 import { teal } from "@material-ui/core/colors";
-import {useUser} from "../lib/hooks";
+import { useUser } from "../lib/hooks";
 
 const TealRadio = withStyles({
   root: {
@@ -16,7 +16,7 @@ const TealRadio = withStyles({
     "&$checked": {
       color: teal[400],
     },
-      padding: '0.25rem 0.5rem'
+    padding: "0.25rem 0.5rem",
   },
   checked: {},
 })((props) => <Radio color="default" {...props} />);

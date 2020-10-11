@@ -3,7 +3,7 @@ import {
   radioSettings,
   talkTheme as talkThemeStr,
 } from "../src/settings/inputOption";
-import { useRecoilState } from "recoil/dist";
+import { useRecoilState } from "recoil";
 import { howFoundMurakamiAtom, otherTalkThemeAtom } from "../src/atoms";
 import * as React from "react";
 

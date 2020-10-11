@@ -1,7 +1,7 @@
 import { Main } from "./Main";
 import { FormSection } from "./FormSection";
 import React from "react";
-import { useRecoilValue } from "recoil/dist";
+import { useRecoilValue } from "recoil";
 import { userAtom } from "../src/atoms";
 
 export function LoadingReservations() {

@@ -2,7 +2,7 @@ import { ReservationDate } from "./ReservationDate";
 import { PreparationQA } from "./PreparationQA";
 import { TealButton } from "./ColorButton";
 import Link from "next/link";
-import { useRecoilValue, useSetRecoilState } from "recoil/dist";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   checkboxAnswerWithName,
   howFoundMurakamiAtom,

@@ -5,7 +5,7 @@ import {
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
-} from "recoil/dist";
+} from "recoil";
 import {
   checkboxAnswerWithName,
   howFoundMurakamiAtom,

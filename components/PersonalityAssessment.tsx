@@ -8,7 +8,7 @@ import {
 } from "../src/settings/inputOption";
 import { TealButton } from "./ColorButton";
 import React from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil/dist";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   myPageSnackBarAtom,
   radioAnswerWithName,

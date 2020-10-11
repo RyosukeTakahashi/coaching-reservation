@@ -54,7 +54,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       res.status(404).json({ error: "no events" });
     }
 
-    const latestEvent = events[events.length - 1];
+    const latestEvent = events[0];
     res.status(200).json({
       hangoutLink: latestEvent.hangoutLink,
       start: latestEvent.start.dateTime,

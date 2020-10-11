@@ -1,6 +1,6 @@
 import Head from "next/head";
 import firebase from "../firebase/clientApp";
-import { useRecoilState, useRecoilValue } from "recoil/dist";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   myPageSnackBarAtom,
   reservationsAtom,
