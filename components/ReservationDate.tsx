@@ -9,7 +9,7 @@ export function ReservationDate() {
     if (isLoading) return <span>読込中...</span>;
     if (isError) return <span>Google Calendarの招待をご確認ください。</span>;
   };
-  const hangout = () => {
+  const zoomLink = () => {
     if (event)
       return (
         <a href={process.env.NEXT_PUBLIC_ZOOM_URL} target="_blank">
@@ -24,7 +24,7 @@ export function ReservationDate() {
     <>
       <ul className={`list-disc pl-5 leading-8`}>
         <li>日時 : {startTime()}</li>
-        <li>場所 : {hangout()}</li>
+        <li>場所 : {zoomLink()}</li>
       </ul>
     </>
   );

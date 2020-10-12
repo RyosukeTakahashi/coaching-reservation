@@ -21,6 +21,11 @@ import { LatestReservation } from "../components/LatestReservation";
 import { LoadingUser } from "../components/LoadingUser";
 import { LoadingReservations } from "../components/LoadingReservations";
 
+//todo: コーチングイントロ
+//todo: matcher以外のフロー用意
+//todo: バイブルからアセスメント引っ張ってくる
+//todo: 性格診断を自前に
+
 export default function MyPage({}: {}) {
   const [user, , loadingUser] = useUser();
   const reservations = useRecoilValue(reservationsAtom);
@@ -41,7 +46,7 @@ export default function MyPage({}: {}) {
         <FormSection>
           <LatestReservation />
         </FormSection>
-
+ 
         <FormSection>
           <PersonalityAssessment />
         </FormSection>
