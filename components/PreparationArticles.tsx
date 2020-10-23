@@ -25,7 +25,7 @@ export function PreparationArticles() {
         </li>
         <li>
           <a href="https://bit.ly/2Om4GRH" target="_blank">
-            『DeNAのの社風や、就活当時の軸ついて』
+            『DeNAの社風や、就活当時の軸ついて』
           </a>
         </li>
         <li>
