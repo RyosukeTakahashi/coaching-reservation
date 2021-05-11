@@ -43,6 +43,6 @@
     "tailwindcss": "^1.5.1",
     "typescript": "^3.9.3",
     "elliptic": ">=6.5.3",
-    "lodash": ">=4.17.19"
+    "lodash": ">=4.17.21"
   }
 }
